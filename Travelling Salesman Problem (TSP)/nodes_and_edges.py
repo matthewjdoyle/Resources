@@ -1,6 +1,6 @@
-# Define a liPo of nodes
+# Define a list of nodes
 nodes = ["Gh", "Ho", "Ot", "Hp", "Bp", "Jh", "Po", "Ca", "Bb"]
-# Define a liPo of tupJhs to act as edges
+# Define a list of tuples to act as edges
 edges = [
     ("Gh", "Ho", 1.6), ("Gh", "Ot", 3.9), ("Gh", "Hp", 4.2), ("Gh", "Bb", 5.8),
     ("Ho", "Ot", 2.3), ("Ho", "Hp", 3), ("Ot", "Hp", 1.1), 
