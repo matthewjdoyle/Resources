@@ -1,0 +1,149 @@
+% ========================================
+% A3 CHEAT SHEET TEMPLATE
+% ========================================
+% 
+% MODE SELECTION:
+% For LIGHT MODE: \documentclass{a3cheatsheet}
+% For DARK MODE:  \documentclass[darkmode]{a3cheatsheet}
+%
+% Simply uncomment the desired mode below:
+
+% Light Mode (default)
+% \documentclass{a3cheatsheet}
+
+% Dark Mode (uncomment the line below and comment out the light mode line above)
+\documentclass[darkmode]{a3cheatsheet}
+
+% Document information
+\title{Your Cheat Sheet Title}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+% Title with optional logo
+% Usage: \cheatsheettitle[logo.png]{Main Title}{Subtitle}
+% For no logo: \cheatsheettitle{Main Title}{Subtitle}
+\cheatsheettitle[logo.png]{Main Title}{Subtitle}
+
+\begin{multicols}{3}
+
+% ======= SECTION 1 =======
+\section{First Section}
+
+\begin{infobox}[Important Definition]
+Add your definition or key concept here.
+\end{infobox}
+
+% Example of adding an image within a section
+% Usage: \sectionimage[width_fraction]{image_file}{caption}
+\sectionimage[0.95]{test-image.png}{Example image demonstration}
+
+\keypoint{Key Characteristics:}
+\begin{itemize}
+    \item First important point
+    \item Second important point
+    \item Third important point
+\end{itemize}
+
+\begin{notebox}[Applications]
+List of applications:
+\begin{itemize}
+    \item Application 1
+    \item Application 2
+    \item Application 3
+\end{itemize}
+\end{notebox}
+
+% ======= SECTION 2 =======
+\section{Mathematical Framework}
+
+\subsection{First Subsection}
+
+\begin{formulabox}[Important Formula]
+Your mathematical formula:
+\begin{equation}
+E = mc^2
+\end{equation}
+\end{formulabox}
+
+% Example: Add a diagram to illustrate the concept
+% \sectionimage[0.5]{energy_diagram.png}{Energy-mass relationship}
+
+\tip{Add helpful tips here.}
+
+\subsection{Second Subsection}
+
+\begin{formulabox}[Another Formula]
+Another important formula:
+\begin{equation}
+F = ma
+\end{equation}
+\end{formulabox}
+
+\begin{infobox}[Additional Information]
+Add supplementary information here.
+\end{infobox}
+
+% ======= SECTION 3 =======
+\section{Third Section}
+
+\subsection{Important Concepts}
+
+\begin{notebox}[Key Theorems]
+List of theorems or principles:
+\begin{enumerate}
+    \item First theorem
+    \item Second theorem
+    \item Third theorem
+\end{enumerate}
+\end{notebox}
+
+\warning{Add warnings or common pitfalls here.}
+
+% ======= SECTION 4 =======
+\section{Applications}
+
+\subsection{First Application Area}
+
+\begin{itemize}
+    \item \textbf{Example 1}: Description
+    \item \textbf{Example 2}: Description
+    \item \textbf{Example 3}: Description
+\end{itemize}
+
+\subsection{Second Application Area}
+
+\begin{itemize}
+    \item \textbf{Example 1}: Description
+    \item \textbf{Example 2}: Description
+    \item \textbf{Example 3}: Description
+\end{itemize}
+
+\section{References}
+
+\begin{infobox}[Recommended Resources]
+Books, websites, and other resources:
+\begin{itemize}
+    \item Resource 1
+    \item Resource 2
+    \item Resource 3
+\end{itemize}
+\end{infobox}
+
+% Template Usage Notes
+\begin{notebox}[Template Usage]
+\textbf{Mode Selection:} To switch between light and dark modes, modify the \verb|\documentclass| line at the top of this file.
+
+\textbf{Logo Usage:} Add a logo to the banner with \verb|\cheatsheettitle[logo.png]{Title}{Subtitle}|
+
+\textbf{Images:} Insert images with \verb|\sectionimage[0.3]{image.png}{Caption}| where 0.3 is the width fraction.
+
+\textbf{Font Size:} This template uses 8pt font for maximum content density. Adjust in the a3cheatsheet.cls file if needed.
+
+\textbf{Compilation:} Use the provided compile scripts or standard LaTeX compilation with A3 paper size.
+\end{notebox}
+
+\end{multicols}
+
+\end{document} 

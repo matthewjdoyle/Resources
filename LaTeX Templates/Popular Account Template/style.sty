@@ -1,0 +1,176 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{style}[2025/07/30 Custom style for popular physics articles]
+
+% Basic packages
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
+\RequirePackage{avant}
+\RequirePackage{mathpazo}
+\RequirePackage{ragged2e}
+
+% Layout packages
+\RequirePackage{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{titlesec}
+\RequirePackage{float}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{microtype}
+\RequirePackage{lettrine}
+\RequirePackage{wrapfig}
+
+% Advanced formatting
+\RequirePackage[framemethod=tikz]{mdframed}
+\RequirePackage{tikz}
+\usetikzlibrary{shapes,backgrounds}
+
+% Load tcolorbox after tikz
+\RequirePackage[many]{tcolorbox}
+
+% Load hyperref last
+\RequirePackage{hyperref}
+
+% Page geometry and layout
+\geometry{
+    a4paper,
+    margin=1.5cm,
+    top=0.5cm,
+    bottom=2cm,
+    columnsep=0.7cm,
+    includehead,
+    includefoot
+}
+
+% Color definitions
+\definecolor{primary}{RGB}{18, 47, 77}      % Deep navy
+\definecolor{secondary}{RGB}{217, 68, 54}    % Coral red
+\definecolor{accent}{RGB}{255, 187, 51}      % Golden yellow
+\definecolor{text}{RGB}{45, 45, 45}          % Near black
+\definecolor{lightshade}{RGB}{247, 249, 252} % Light blue-gray
+\definecolor{darkshade}{RGB}{87, 96, 106}    % Slate gray
+
+% Redefine mainblue to use our primary color
+\colorlet{mainblue}{primary}
+
+% Font setup for pdflatex
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\sfdefault}{pag} % Use URW Gothic (similar to Avant Garde)
+
+% Title formatting
+\titleformat{\section}
+{\color{primary}\Large\bfseries\raggedright}
+{\thesection}{1em}{}[{\color{secondary}\titlerule[0.8pt]}]
+
+\titleformat{\subsection}
+{\color{darkshade}\large\bfseries\raggedright}
+{\thesubsection}{1em}{}
+
+\titlespacing*{\section}{0pt}{2.5ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2ex plus 1ex minus .2ex}{1ex plus .2ex}
+
+% Set default text color
+\color{text}
+
+% Header and footer style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{darkshade}\small\textit{\@title}}
+\fancyhead[R]{\color{darkshade}\small\thepage}
+\fancyfoot[C]{\color{darkshade}\small\textit{Popular Physics}}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{secondary}\leaders\hrule height \headrulewidth\hfill}}
+
+% Custom environments and commands
+\newcommand{\articlesubtitle}[1]{%
+    \vspace{-2em}
+    \begin{center}
+        \large\textit{#1}
+    \end{center}
+    \vspace{2em}
+}
+
+% Drop cap for first paragraph
+\newcommand{\firstparagraph}[1]{%
+    \lettrine[lines=3,findent=2pt,nindent=0pt]{\textcolor{mainblue}{#1}}%
+}
+
+% Highlight box for key concepts
+\newtcolorbox{keypoint}[1][]{%
+    enhanced,
+    colback=lightblue,
+    colframe=mainblue,
+    boxrule=0.5pt,
+    fonttitle=\bfseries,
+    title=#1,
+    attach boxed title to top left={yshift=-\tcboxedtitleheight/2},
+    boxed title style={
+        colback=mainblue,
+        coltext=white,
+    }
+}
+
+% Sidebar note environment
+\newenvironment{sidenote}[1][]{%
+    \begin{mdframed}[
+        linewidth=0.5pt,
+        linecolor=mainblue,
+        backgroundcolor=lightblue,
+        leftmargin=1cm,
+        rightmargin=1cm,
+        roundcorner=5pt
+    ]
+    \textbf{#1}\par\smallskip
+}{%
+    \end{mdframed}
+}
+
+% Figure caption style
+\captionsetup{
+    font={small,rm},
+    labelfont={bf,color=secondary},
+    format=plain,
+    justification=justified,
+    margin=8pt,
+    skip=8pt
+}
+
+% Custom figure environment with caption styling
+\newenvironment{feature}[1][]{%
+    \begin{figure*}[htbp]
+    \centering
+}{%
+    \end{figure*}
+}
+
+% Custom box environments
+\tcbset{
+    highlight/.style={
+        enhanced,
+        colback=lightshade,
+        colframe=secondary,
+        boxrule=0.5pt,
+        fonttitle=\bfseries\color{white},
+        coltitle=white,
+        attach boxed title to top left={yshift=-\tcboxedtitleheight/2},
+        boxed title style={colback=secondary},
+        left=12pt, right=12pt, top=12pt, bottom=12pt,
+        sharp corners
+    }
+}
+
+% Decorative section divider
+\newcommand{\sectiondivider}{%
+    \begin{center}
+        \vspace{1em}
+        \tikz{
+            \draw[mainblue, line width=0.5pt] (0,0) -- (2,0);
+            \fill[mainblue] (2.5,0) circle (2pt);
+            \draw[mainblue, line width=0.5pt] (3,0) -- (5,0);
+        }
+        \vspace{1em}
+    \end{center}
+}

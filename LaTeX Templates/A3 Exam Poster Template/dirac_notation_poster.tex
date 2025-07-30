@@ -1,0 +1,276 @@
+% ========================================
+% DIRAC NOTATION QUANTUM MECHANICS POSTER
+% ========================================
+% 
+% MODE SELECTION:
+% For LIGHT MODE: \documentclass{a3cheatsheet}
+% For DARK MODE:  \documentclass[darkmode]{a3cheatsheet}
+%
+% Simply uncomment the desired mode below:
+
+% Light Mode (default)
+\documentclass{a3cheatsheet}
+
+% Dark Mode (uncomment the line below and comment out the light mode line above)
+% \documentclass[darkmode]{a3cheatsheet}
+
+% Document information
+\title{Dirac Notation in Quantum Mechanics}
+\author{Quantum Physics Reference}
+\date{\today}
+
+\begin{document}
+
+% Title with optional logo
+\cheatsheettitle{Dirac Notation}{Complete Reference for Quantum Mechanics}
+
+\begin{multicols}{3}
+
+% ======= SECTION 1: BASICS =======
+\section{Fundamental Concepts}
+
+\begin{infobox}[Dirac Notation Definition]
+\textbf{Bra-Ket Notation} (Dirac notation) is a standard notation for describing quantum states and operations in quantum mechanics.
+\end{infobox}
+
+\keypoint{Three Key Components:}
+\begin{itemize}
+    \item \textbf{Ket}: $|\psi\rangle$ - column vector representing a quantum state
+    \item \textbf{Bra}: $\langle\phi|$ - row vector (complex conjugate transpose)
+    \item \textbf{Bracket}: $\langle\phi|\psi\rangle$ - inner product (probability amplitude)
+\end{itemize}
+
+\begin{formulabox}[Basic Definitions]
+\begin{align}
+\text{Ket:} \quad |\psi\rangle &\equiv \begin{pmatrix} c_1 \\ c_2 \\ \vdots \\ c_n \end{pmatrix} \\
+\text{Bra:} \quad \langle\psi| &\equiv (c_1^*, c_2^*, \ldots, c_n^*) \\
+\text{Inner Product:} \quad \langle\phi|\psi\rangle &= \sum_i \phi_i^* \psi_i
+\end{align}
+\end{formulabox}
+
+\begin{notebox}[Normalization]
+For normalized states:
+$$\langle\psi|\psi\rangle = 1$$
+This ensures the total probability equals unity.
+\end{notebox}
+
+% ======= SECTION 2: OPERATIONS =======
+\section{Mathematical Operations}
+
+\subsection{Linear Combinations}
+
+\begin{formulabox}[Superposition Principle]
+Any quantum state can be written as:
+$$|\psi\rangle = \sum_i c_i |i\rangle$$
+where $|i\rangle$ are basis states and $c_i$ are complex coefficients.
+\end{formulabox}
+
+\subsection{Operators}
+
+\begin{infobox}[Operator Action]
+Operators $\hat{A}$ act on kets:
+$$\hat{A}|\psi\rangle = |\phi\rangle$$
+\end{infobox}
+
+\begin{formulabox}[Expectation Values]
+The expectation value of operator $\hat{A}$:
+$$\langle\hat{A}\rangle = \langle\psi|\hat{A}|\psi\rangle$$
+\end{formulabox}
+
+\tip{Operators are represented by hats (e.g., $\hat{H}$, $\hat{p}$, $\hat{x}$)}
+
+\subsection{Outer Products}
+
+\begin{formulabox}[Projection Operators]
+The outer product creates projection operators:
+$$|\psi\rangle\langle\phi| = \hat{P}_{\psi,\phi}$$
+Special case - projector onto state $|\psi\rangle$:
+$$\hat{P}_\psi = |\psi\rangle\langle\psi|$$
+\end{formulabox}
+
+% ======= SECTION 3: COMMON STATES =======
+\section{Standard Quantum States}
+
+\subsection{Spin-1/2 States}
+
+\begin{formulabox}[Pauli Basis States]
+\begin{align}
+|+\rangle &= \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \quad |-\rangle = \begin{pmatrix} 0 \\ 1 \end{pmatrix} \\
+|+_x\rangle &= \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}, \quad |-_x\rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -1 \end{pmatrix} \\
+|+_y\rangle &= \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ i \end{pmatrix}, \quad |-_y\rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -i \end{pmatrix}
+\end{align}
+\end{formulabox}
+
+\subsection{Position and Momentum}
+
+\begin{formulabox}[Continuous Basis States]
+\begin{align}
+\text{Position:} \quad |x\rangle &\text{ - eigenstate of } \hat{x} \\
+\text{Momentum:} \quad |p\rangle &\text{ - eigenstate of } \hat{p} \\
+\langle x|p\rangle &= \frac{1}{\sqrt{2\pi\hbar}} e^{ipx/\hbar}
+\end{align}
+\end{formulabox}
+
+\begin{notebox}[Wave Functions]
+The wave function is the position representation:
+$$\psi(x) = \langle x|\psi\rangle$$
+\end{notebox}
+
+% ======= SECTION 4: IMPORTANT RELATIONS =======
+\section{Key Relations \& Identities}
+
+\subsection{Completeness Relations}
+
+\begin{formulabox}[Resolution of Identity]
+For discrete basis:
+$$\sum_i |i\rangle\langle i| = \hat{I}$$
+For continuous basis:
+$$\int |x\rangle\langle x| dx = \hat{I}$$
+\end{formulabox}
+
+\subsection{Orthogonality}
+
+\begin{formulabox}[Orthonormal Basis]
+\begin{align}
+\langle i|j\rangle &= \delta_{ij} \quad \text{(discrete)} \\
+\langle x|x'\rangle &= \delta(x-x') \quad \text{(continuous)}
+\end{align}
+\end{formulabox}
+
+\warning{Be careful with normalization factors in continuous bases!}
+
+% ======= SECTION 5: DYNAMICS =======
+\section{Time Evolution}
+
+\subsection{Schrödinger Equation}
+
+\begin{formulabox}[Time-Dependent Schrödinger Equation]
+$$i\hbar\frac{\partial}{\partial t}|\psi(t)\rangle = \hat{H}|\psi(t)\rangle$$
+where $\hat{H}$ is the Hamiltonian operator.
+\end{formulabox}
+
+\subsection{Time Evolution Operator}
+
+\begin{formulabox}[Unitary Evolution]
+$$|\psi(t)\rangle = \hat{U}(t,t_0)|\psi(t_0)\rangle$$
+where $\hat{U}(t,t_0) = e^{-i\hat{H}(t-t_0)/\hbar}$
+\end{formulabox}
+
+\begin{infobox}[Properties of $\hat{U}$]
+\begin{itemize}
+    \item Unitary: $\hat{U}^\dagger\hat{U} = \hat{I}$
+    \item $\hat{U}(t_0,t_0) = \hat{I}$
+    \item $\hat{U}(t_2,t_0) = \hat{U}(t_2,t_1)\hat{U}(t_1,t_0)$
+\end{itemize}
+\end{infobox}
+
+% ======= SECTION 6: MEASUREMENT =======
+\section{Quantum Measurement}
+
+\subsection{Born Rule}
+
+\begin{formulabox}[Probability of Measurement]
+Probability of measuring eigenvalue $a_n$ of operator $\hat{A}$:
+$$P(a_n) = |\langle a_n|\psi\rangle|^2$$
+where $|a_n\rangle$ is the corresponding eigenstate.
+\end{formulabox}
+
+\subsection{Post-Measurement State}
+
+\begin{formulabox}[State Collapse]
+After measuring $a_n$, the state becomes:
+$$|\psi'\rangle = \frac{\hat{P}_n|\psi\rangle}{\sqrt{\langle\psi|\hat{P}_n|\psi\rangle}}$$
+where $\hat{P}_n = |a_n\rangle\langle a_n|$
+\end{formulabox}
+
+\keypoint{Measurement Types:}
+\begin{itemize}
+    \item \textbf{Projective}: Uses projection operators
+    \item \textbf{POVM}: Positive Operator-Valued Measure
+    \item \textbf{Weak}: Minimal disturbance measurements
+\end{itemize}
+
+% ======= SECTION 7: ADVANCED TOPICS =======
+\section{Advanced Concepts}
+
+\subsection{Tensor Products}
+
+\begin{formulabox}[Composite Systems]
+For two systems A and B:
+$$|\psi_{AB}\rangle = |\psi_A\rangle \otimes |\psi_B\rangle$$
+In general:
+$$|\psi_{AB}\rangle = \sum_{i,j} c_{ij}|i_A\rangle \otimes |j_B\rangle$$
+\end{formulabox}
+
+\subsection{Entanglement}
+
+\begin{formulabox}[Bell States]
+\begin{align}
+|\Phi^+\rangle &= \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle) \\
+|\Phi^-\rangle &= \frac{1}{\sqrt{2}}(|00\rangle - |11\rangle) \\
+|\Psi^+\rangle &= \frac{1}{\sqrt{2}}(|01\rangle + |10\rangle) \\
+|\Psi^-\rangle &= \frac{1}{\sqrt{2}}(|01\rangle - |10\rangle)
+\end{align}
+\end{formulabox}
+
+\begin{notebox}[Entanglement Criterion]
+A state is entangled if it cannot be written as:
+$$|\psi\rangle \neq |\psi_A\rangle \otimes |\psi_B\rangle$$
+\end{notebox}
+
+% ======= SECTION 8: USEFUL FORMULAS =======
+\section{Essential Formulas}
+
+\subsection{Commutation Relations}
+
+\begin{formulabox}[Canonical Commutators]
+\begin{align}
+[\hat{x}, \hat{p}] &= i\hbar \\
+[\hat{L}_i, \hat{L}_j] &= i\hbar\epsilon_{ijk}\hat{L}_k \\
+[\hat{a}, \hat{a}^\dagger] &= 1 \quad \text{(harmonic oscillator)}
+\end{align}
+\end{formulabox}
+
+\subsection{Uncertainty Relations}
+
+\begin{formulabox}[Heisenberg Uncertainty Principle]
+For any two operators $\hat{A}$ and $\hat{B}$:
+$$\Delta A \cdot \Delta B \geq \frac{1}{2}|\langle[\hat{A},\hat{B}]\rangle|$$
+Most famous case:
+$$\Delta x \cdot \Delta p \geq \frac{\hbar}{2}$$
+\end{formulabox}
+
+\tip{The uncertainty principle is a fundamental feature of quantum mechanics, not a limitation of measurement!}
+
+\section{References \& Resources}
+
+\begin{infobox}[Recommended Reading]
+\textbf{Classic Textbooks:}
+\begin{itemize}
+    \item Griffiths - Introduction to Quantum Mechanics
+    \item Sakurai - Modern Quantum Mechanics
+    \item Nielsen \& Chuang - Quantum Computation
+\end{itemize}
+
+\textbf{Key Papers:}
+\begin{itemize}
+    \item Dirac - The Principles of Quantum Mechanics
+    \item Born - Statistical Interpretation
+    \item Bell - On the Einstein-Podolsky-Rosen Paradox
+\end{itemize}
+\end{infobox}
+
+\begin{notebox}[Quick Reference]
+\textbf{Common Notation:}
+\begin{itemize}
+    \item $\hbar = \frac{h}{2\pi}$ - reduced Planck constant
+    \item $\hat{H}$ - Hamiltonian (energy operator)
+    \item $\hat{U}$ - unitary time evolution operator
+    \item $\delta_{ij}$ - Kronecker delta
+    \item $\delta(x)$ - Dirac delta function
+\end{itemize}
+\end{notebox}
+
+\end{multicols}
+
+\end{document} 
