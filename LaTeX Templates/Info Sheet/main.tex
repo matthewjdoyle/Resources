@@ -1,0 +1,246 @@
+% =============================================================================
+% Python Technical Reference Sheet
+% Landscape A4 format - Perfect for Technical Interviews
+% =============================================================================
+
+\documentclass[11pt]{article}
+\usepackage{style}
+
+% Document metadata
+\title{Python Reference Sheet}
+\author{Technical Interview Guide}
+\date{\today}
+
+\begin{document}
+
+% Header with technology name and version
+% \techheader[Python 3.11]{Python}
+
+% Quick Reference Section
+\quickref{
+  \begin{tabular}{llll}
+    \textbf{Type} & \textbf{Example} & \textbf{Type} & \textbf{Example} \\
+    \hline
+    \datatype{int} & \code{42} & \datatype{float} & \code{3.14} \\
+    \datatype{str} & \code{"hello"} & \datatype{bool} & \code{True} \\
+    \datatype{list} & \code{[1, 2, 3]} & \datatype{tuple} & \code{(1, 2, 3)} \\
+    \datatype{dict} & \code{\{"a": 1\}} & \datatype{set} & \code{\{1, 2, 3\}}
+  \end{tabular}
+}
+
+% Basic Syntax Section
+\section{Basic Syntax}
+
+\begin{multicols}{3}
+  \syntaxbox{Variable Assignment}{
+    \code{name = value}\\
+    \code{x, y = 1, 2}\\
+    \code{a = b = c = 0}
+  }
+  
+  \syntaxbox{Function Definition}{
+    \code{def func(args):}\\
+    \code{    return value}\\
+    \code{def func(a, b=0, *args):}
+  }
+\end{multicols}
+
+% Control Structures
+\section{Control Structures}
+
+\begin{multicols}{3}
+  \subsection{If Statement}
+  \begin{moderncode}
+if condition:
+    statement
+elif other_condition:
+    statement
+else:
+    statement
+  \end{moderncode}
+  
+  \subsection{For Loop}
+  \begin{moderncode}
+for item in iterable:
+    statement
+    
+for i in range(10):
+    print(i)
+  \end{moderncode}
+\end{multicols}
+
+\begin{multicols}{3}
+  \subsection{While Loop}
+  \begin{moderncode}
+while condition:
+    statement
+    if break_condition:
+        break
+  \end{moderncode}
+  
+  \subsection{List Comprehension}
+  \begin{moderncode}
+\# Basic
+[x for x in range(10)]
+
+\# With condition
+[x for x in range(10) if x % 2 == 0]
+
+\# Nested
+[(x, y) for x in [1,2] for y in [3,4]]
+  \end{moderncode}
+\end{multicols}
+
+% Data Structures
+\section{Data Structures}
+
+\begin{multicols}{3}
+  \subsection{Lists}
+  \begin{itemize}
+    \item \code{list.append(x)} - Add item to end
+    \item \code{list.insert(i, x)} - Insert at position
+    \item \code{list.remove(x)} - Remove first occurrence
+    \item \code{list.pop([i])} - Remove and return item
+    \item \code{list.sort()} - Sort in place
+    \item \code{list.reverse()} - Reverse in place
+  \end{itemize}
+  
+  \subsection{Dictionaries}
+  \begin{itemize}
+    \item \code{dict.get(key, default)} - Get with default
+    \item \code{dict.update(other)} - Update with other dict
+    \item \code{dict.pop(key)} - Remove and return value
+    \item \code{dict.keys()} - Get all keys
+    \item \code{dict.values()} - Get all values
+    \item \code{dict.items()} - Get key-value pairs
+  \end{itemize}
+\end{multicols}
+
+% Common Methods
+\section{Common Methods}
+
+\begin{multicols}{3}
+  \subsection{String Methods}
+  \method{str.split(sep)}{Split string by separator}
+  \method{str.join(iterable)}{Join iterable with string}
+  \method{str.strip()}{Remove whitespace}
+  \method{str.replace(old, new)}{Replace substring}
+  \method{str.startswith(prefix)}{Check prefix}
+  \method{str.endswith(suffix)}{Check suffix}
+  \method{str.upper()}{Convert to uppercase}
+  \method{str.lower()}{Convert to lowercase}
+  
+  \subsection{List Methods}
+  \method{list.append(x)}{Add item to end}
+  \method{list.extend(iterable)}{Extend with iterable}
+  \method{list.insert(i, x)}{Insert at index}
+  \method{list.remove(x)}{Remove first occurrence}
+  \method{list.pop([i])}{Remove and return item}
+  \method{list.index(x)}{Find index of item}
+  \method{list.count(x)}{Count occurrences}
+  \method{list.sort()}{Sort in place}
+\end{multicols}
+
+% Key Concepts
+\section{Key Concepts}
+
+\begin{multicols}{3}
+  \conceptbox{List vs Tuple}{
+    \textbf{Lists:} Mutable, use \code{[]}\\
+    \textbf{Tuples:} Immutable, use \code{()}\\
+    Tuples are faster and use less memory
+  }
+  
+  \conceptbox{Shallow vs Deep Copy}{
+    \textbf{Shallow:} \code{list.copy()}\\
+    \textbf{Deep:} \code{copy.deepcopy()}\\
+    Deep copy creates new nested objects
+  }
+\end{multicols}
+
+\begin{multicols}{3}
+  \conceptbox{Generator Expressions}{
+    \code{(x for x in range(10))}\\
+    Memory efficient, lazy evaluation\\
+    Use parentheses, not brackets
+  }
+  
+  \conceptbox{Context Managers}{
+    \code{with open('file.txt') as f:}\\
+    Automatic resource management\\
+    Ensures cleanup even with exceptions
+  }
+\end{multicols}
+
+% Common Patterns
+\section{Common Patterns}
+
+\begin{multicols}{3}
+  \subsection{Error Handling}
+  \begin{moderncode}
+try:
+    risky_operation()
+except ValueError as e:
+    handle_error(e)
+except Exception as e:
+    handle_generic(e)
+finally:
+    cleanup()
+  \end{moderncode}
+  
+  \subsection{File Operations}
+  \begin{moderncode}
+\# Read file
+with open('file.txt', 'r') as f:
+    content = f.read()
+
+\# Write file
+with open('file.txt', 'w') as f:
+    f.write('content')
+  \end{moderncode}
+\end{multicols}
+
+\begin{multicols}{3}
+  \subsection{Lambda Functions}
+  \begin{moderncode}
+\# Simple lambda
+lambda x: x * 2
+
+\# With filter
+filter(lambda x: x > 0, numbers)
+
+\# With map
+map(lambda x: x**2, numbers)
+  \end{moderncode}
+  
+  \subsection{Decorators}
+  \begin{moderncode}
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        \# Do something before
+        result = func(*args, **kwargs)
+        \# Do something after
+        return result
+    return wrapper
+
+@decorator
+def function():
+    pass
+  \end{moderncode}
+\end{multicols}
+
+% Important Notes
+% \importantnote{
+%   \textbf{Indentation:} Use 4 spaces, not tabs\\
+%   \textbf{Names:} Use snake\_case for variables and functions\\
+%   \textbf{Classes:} Use CamelCase for class names\\
+%   \textbf{Constants:} Use UPPER\_CASE for constants
+% }
+
+% Footer with additional information
+\vfill
+\begin{center}
+  \textcolor{darkgray}{\small Python 3.11 Reference \quad | \quad Technical Interview Guide}
+\end{center}
+
+\end{document}

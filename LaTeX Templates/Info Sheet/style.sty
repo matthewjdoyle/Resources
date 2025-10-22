@@ -1,0 +1,312 @@
+% =============================================================================
+% Technical Reference Sheet Style Package
+% Designed for landscape A4 format - perfect for technical interview reference
+% =============================================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{style}[2024/01/01 Technical Reference Sheet Style]
+
+% =============================================================================
+% PACKAGE IMPORTS
+% =============================================================================
+
+\usepackage[landscape, a3paper, margin=0.8cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{tikz}
+\usepackage{calc}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+\tcbuselibrary{listingsutf8}
+\tcbuselibrary{skins}
+
+% =============================================================================
+% COLOR DEFINITIONS
+% =============================================================================
+
+\definecolor{primary}{HTML}{2C3E50}      % Dark blue-gray
+\definecolor{secondary}{HTML}{3498DB}    % Blue
+\definecolor{accent}{HTML}{E74C3C}       % Red
+\definecolor{success}{HTML}{27AE60}      % Green
+\definecolor{warning}{HTML}{F39C12}      % Orange
+\definecolor{lightgray}{HTML}{ECF0F1}    % Light gray
+\definecolor{darkgray}{HTML}{7F8C8D}     % Dark gray
+\definecolor{codebg}{HTML}{F8F9FA}       % Code background
+\definecolor{keyword}{HTML}{0066CC}      % Keyword color
+\definecolor{string}{HTML}{CC6600}       % String color
+\definecolor{comment}{HTML}{999999}      % Comment color
+
+% =============================================================================
+% PAGE SETUP
+% =============================================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{primary}{\textbf{\@title}}}
+\fancyhead[R]{\textcolor{primary}{\textbf{Technical Reference}}}
+\fancyfoot[C]{\textcolor{darkgray}{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% =============================================================================
+% TYPOGRAPHY
+% =============================================================================
+
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+
+% Title formatting
+\titleformat{\section}
+  {\large\bfseries\color{primary}}
+  {\thesection}
+  {0.8em}
+  {}
+  [\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{secondary}}
+  {\thesubsection}
+  {0.8em}
+  {}
+
+\titleformat{\subsubsection}
+  {\small\bfseries\color{accent}}
+  {\thesubsubsection}
+  {0.8em}
+  {}
+
+% =============================================================================
+% MODERN CODE LISTING SETUP
+% =============================================================================
+
+% Define a modern tcolorbox for code blocks
+\newtcblisting{moderncode}[1][]{%
+  listing only,
+  listing options={
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{keyword}\bfseries,
+    stringstyle=\color{string},
+    commentstyle=\color{comment}\itshape,
+    identifierstyle=\color{primary},
+    backgroundcolor=\color{codebg},
+    rulecolor=\color{lightgray},
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    tabsize=2,
+    captionpos=b,
+    frame=single,
+    framerule=0.5pt,
+    xleftmargin=1em,
+    xrightmargin=0.3em,
+    aboveskip=0.5em,
+    belowskip=0.5em,
+    #1
+  },
+  colframe=secondary,
+  colback=codebg,
+  sharp corners=south,
+  arc=3pt,
+  boxrule=0.6pt,
+  left=4pt,
+  right=4pt,
+  top=4pt,
+  bottom=4pt
+}
+
+% Fallback lstlisting settings for compatibility
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=2pt,
+  rulecolor=\color{lightgray},
+  keywordstyle=\color{keyword}\bfseries,
+  stringstyle=\color{string},
+  commentstyle=\color{comment}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{darkgray},
+  numbersep=5pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b,
+  language=Python
+}
+
+% =============================================================================
+% CUSTOM COMMANDS
+% =============================================================================
+
+% Header section with technology name and version
+\newcommand{\techheader}[2][]{%
+  \begin{center}
+    \vspace{-0.3cm}
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north west,inner sep=0pt] at (current page.north west) {
+        \begin{tikzpicture}
+          \fill[primary] (0,0) rectangle (\paperwidth,2cm);
+          \node[white,anchor=west,xshift=1cm,yshift=-1cm] {
+            \Large\textbf{#2}
+          };
+          \if\relax\detokenize{#1}\relax\else
+            \node[white,anchor=east,xshift=-1cm,yshift=-1cm] {
+              \normalsize #1
+            };
+          \fi
+        \end{tikzpicture}
+      };
+    \end{tikzpicture}
+    \vspace{2.5cm}
+  \end{center}
+}
+
+% Quick reference box
+\newcommand{\quickref}[1]{%
+  \begin{center}
+    \begin{tikzpicture}
+      \node[fill=lightgray,rounded corners=4pt,inner sep=6pt,text width=0.9\textwidth] {
+        \centering\normalsize\textbf{Quick Reference}\\[0.2em]
+        #1
+      };
+    \end{tikzpicture}
+  \end{center}
+  \vspace{0.3em}
+}
+
+% Syntax box
+\newcommand{\syntaxbox}[2]{%
+  \begin{tikzpicture}
+    \node[fill=secondary!10,rounded corners=4pt,inner sep=6pt,text width=0.48\textwidth] {
+      \textbf{#1}\\[0.2em]
+      #2
+    };
+  \end{tikzpicture}
+}
+
+% Important concept box
+\newcommand{\conceptbox}[2]{%
+  \begin{tikzpicture}
+    \node[fill=accent!10,rounded corners=4pt,inner sep=6pt,text width=0.48\textwidth] {
+      \textbf{\faLightbulb\ #1}\\[0.2em]
+      #2
+    };
+  \end{tikzpicture}
+}
+
+% Warning/Important note
+\newcommand{\importantnote}[1]{%
+  \begin{center}
+    \begin{tikzpicture}
+      \node[fill=warning!20,rounded corners=4pt,inner sep=6pt,text width=0.9\textwidth] {
+        \centering\normalsize\textbf{\faExclamationTriangle\ Important}\\[0.2em]
+        #1
+      };
+    \end{tikzpicture}
+  \end{center}
+}
+
+% Inline code
+\newcommand{\code}[1]{\texttt{\color{keyword}#1}}
+
+% Method/Function signature
+\newcommand{\method}[2]{%
+  \textbf{\code{#1}} \hfill \textit{#2}
+}
+
+% Data type
+\newcommand{\datatype}[1]{\textcolor{accent}{\textbf{#1}}}
+
+% =============================================================================
+% LIST FORMATTING
+% =============================================================================
+
+\setlist[itemize]{leftmargin=*,itemsep=0.5pt,topsep=0.5pt}
+\setlist[enumerate]{leftmargin=*,itemsep=0.5pt,topsep=0.5pt}
+
+\renewcommand{\labelitemi}{\textcolor{secondary}{\faCircle}}
+\renewcommand{\labelitemii}{\textcolor{accent}{\faCircle}}
+\renewcommand{\labelitemiii}{\textcolor{success}{\faCircle}}
+
+% =============================================================================
+% TABLE FORMATTING
+% =============================================================================
+
+\renewcommand{\arraystretch}{1.1}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% =============================================================================
+% HYPERREF SETUP
+% =============================================================================
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=secondary,
+  urlcolor=secondary,
+  citecolor=accent,
+  filecolor=darkgray
+}
+
+% =============================================================================
+% PAGE BREAKS AND SPACING
+% =============================================================================
+
+\setlength{\topskip}{0pt}
+\setlength{\headheight}{15pt}
+\setlength{\headsep}{10pt}
+
+% =============================================================================
+% UTILITY COMMANDS
+% =============================================================================
+
+% Quick section divider
+\newcommand{\sectiondivider}{%
+  \vspace{0.3em}
+  \hrule height 0.3pt
+  \vspace{0.3em}
+}
+
+% Compact spacing
+\newcommand{\compact}{%
+  \setlength{\parskip}{2pt}
+  \setlist[itemize]{itemsep=0.5pt,topsep=0.5pt}
+  \setlist[enumerate]{itemsep=0.5pt,topsep=0.5pt}
+}
+
+% Normal spacing
+\newcommand{\normalspacing}{%
+  \setlength{\parskip}{4pt}
+  \setlist[itemize]{itemsep=1pt,topsep=1pt}
+  \setlist[enumerate]{itemsep=1pt,topsep=1pt}
+}
+
+% Two-column layout helper
+\newcommand{\twocolumns}[2]{%
+  \begin{multicols}{2}
+    #1
+    \columnbreak
+    #2
+  \end{multicols}
+}

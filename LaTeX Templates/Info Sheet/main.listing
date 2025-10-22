@@ -1,0 +1,11 @@
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        \# Do something before
+        result = func(*args, **kwargs)
+        \# Do something after
+        return result
+    return wrapper
+
+@decorator
+def function():
+    pass
