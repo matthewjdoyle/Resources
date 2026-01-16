@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel A Level Statistics: Hypothesis Testing Decision Tree</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#e0e7ff',
+                edgeLabelBackground: '#ffffff',
+                tertiaryColor: '#f3f4f6',
+                fontFamily: 'Inter'
+            },
+            securityLevel: 'loose'
+        });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mermaid-container {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        /* Ensure the svg takes up space but doesn't overflow weirdly without scroll */
+        .mermaid {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-900 mb-2">Hypothesis Testing Decision Tree</h1>
+            <p class="text-lg text-indigo-600">Edexcel A Level Statistics (AS & A Level)</p>
+        </header>
+
+        <!-- Diagram Section -->
+        <div class="mermaid-container mb-12">
+            <div class="mermaid">
+graph TD
+    StartNode["<b>START HERE</b><br>Read the Exam Question"] --> Q1{"Step 1: <br>What is the Data?"}
+
+    %% Branch 1: Binomial (Blue)
+    Q1 -->|Proportions, Counts, Probability| B["<b>Binomial Test</b><br><i>(Proportion Test)</i>"]
+    B --> B_Clue["<b>Keywords:</b><br>'Number of successes'<br>'Proportion'<br>Fixed trials n"]
+    B_Clue --> B_Hyp["<b>Set H₀:</b><br>H₀: p = ..."]
+    
+    %% Branch 2: Correlation (Green)
+    Q1 -->|Relationship between 2 Variables| C["<b>Correlation Test</b><br><i>(PMCC / Pearson's)</i>"]
+    C --> C_Clue["<b>Keywords:</b><br>'Correlation'<br>'Linear relationship'<br>'Product Moment'"]
+    C_Clue --> C_Hyp["<b>Set H₀:</b><br>H₀: ρ = 0"]
+
+    %% Branch 3: Normal (Purple)
+    Q1 -->|Averages / Means| N["<b>Normal Test</b><br><i>(Z-Test for Mean)</i>"]
+    N --> N_Clue["<b>Keywords:</b><br>'Mean value'<br>'Sample mean'<br>'Standard deviation'"]
+    N_Clue --> N_Hyp["<b>Set H₀:</b><br>H₀: μ = ..."]
+
+    %% TAIL LOGIC SUBGRAPH (Orange)
+    subgraph Tails ["Step 2: Choosing Tails (H₁)"]
+        direction TB
+        Hypotheses{"<b>Check Question Wording</b><br>Is there a specific direction?"}
+        
+        Hypotheses -->|Increase, Decrease, Greater, Less| One["<b>One-Tailed Test</b><br>H₁ uses &lt; or &gt;"]
+        
+        Hypotheses -->|Change, Different, Relationship| Two["<b>Two-Tailed Test</b><br>H₁ uses ≠<br><b>CRITICAL:</b> Divide α by 2!"]
+    end
+
+    %% Connecting main branches to Tail Logic
+    B_Hyp --> Hypotheses
+    C_Hyp --> Hypotheses
+    N_Hyp --> Hypotheses
+
+    %% Final Calc Steps
+    One --> Calc{"Step 3: <br>Calculate"}
+    Two --> Calc
+    
+    Calc -->|Binomial| Calc_B["Find P(X ≥ x) or P(X ≤ x)<br>Compare to α"]
+    Calc -->|Correlation| Calc_C["Compare r value against<br>Formula Book Table"]
+    Calc -->|Normal| Calc_N["Find Z-Score<br>Compare to Z-Critical"]
+
+    %% Styling
+    classDef main fill:#312e81,stroke:#1e1b4b,stroke-width:2px,color:white,font-weight:bold;
+    classDef bin fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a;
+    classDef corr fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#14532d;
+    classDef norm fill:#faf5ff,stroke:#a855f7,stroke-width:2px,color:#581c87;
+    classDef tail fill:#fff7ed,stroke:#f97316,stroke-width:2px,color:#7c2d12;
+    classDef info fill:#fff,stroke:#9ca3af,stroke-dasharray: 5 5;
+    
+    class StartNode main;
+    class B bin;
+    class C corr;
+    class N norm;
+    class Hypotheses,One,Two tail;
+    class Q1,Calc info;
+    class B_Clue,C_Clue,N_Clue,B_Hyp,C_Hyp,N_Hyp,Calc_B,Calc_C,Calc_N info;
+            </div>
+        </div>
+
+        <!-- Text Summary Section -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Card 1: Binomial -->
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-blue-500">
+                <h2 class="text-xl font-bold mb-2 text-gray-800">Binomial Test</h2>
+                <p class="text-xs text-blue-600 font-semibold mb-3">AKA: Proportion Test</p>
+                <ul class="text-sm space-y-2 text-gray-600">
+                    <li><strong>Symbol:</strong> $p$ (Probability)</li>
+                    <li><strong>Variable:</strong> $X$ (Count)</li>
+                    <li><strong>Distribution:</strong> $X \sim B(n, p)$</li>
+                    <li class="bg-blue-50 p-2 rounded"><strong>Test:</strong> Calculate probability of result <em>and more extreme</em>.</li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Correlation -->
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-green-500">
+                <h2 class="text-xl font-bold mb-2 text-gray-800">Correlation Test</h2>
+                <p class="text-xs text-green-600 font-semibold mb-3">AKA: PMCC, Pearson's, Linear</p>
+                <ul class="text-sm space-y-2 text-gray-600">
+                    <li><strong>Symbol:</strong> $\rho$ (Rho)</li>
+                    <li><strong>Statistic:</strong> $r$ (from calculator)</li>
+                    <li><strong>Note:</strong> Tests for <em>Linear</em> correlation only.</li>
+                    <li class="bg-green-50 p-2 rounded"><strong>Test:</strong> Compare 'r' to critical value table.</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Normal -->
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-purple-500">
+                <h2 class="text-xl font-bold mb-2 text-gray-800">Normal Test</h2>
+                <p class="text-xs text-purple-600 font-semibold mb-3">AKA: Z-Test, Test for Mean</p>
+                <ul class="text-sm space-y-2 text-gray-600">
+                    <li><strong>Symbol:</strong> $\mu$ (Mu - Mean)</li>
+                    <li><strong>Statistic:</strong> $\bar{x}$ (Sample Mean)</li>
+                    <li><strong>Distribution:</strong> $\bar{X} \sim N(\mu, \sigma^2/n)$</li>
+                    <li class="bg-purple-50 p-2 rounded"><strong>Test:</strong> Calc Z-score. If sample is large ($n>30$) but pop. not normal, cite <strong>CLT</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- Card 4: TAILS GUIDE -->
+            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-orange-500">
+                <h2 class="text-xl font-bold mb-2 text-gray-800">Tails Guide</h2>
+                <p class="text-xs text-orange-600 font-semibold mb-3">Critical Decision</p>
+                
+                <div class="mb-3">
+                    <strong class="text-sm text-gray-800">One-Tailed (< or >)</strong>
+                    <p class="text-xs text-gray-600">"Increased", "Decreased", "More than", "Positive correlation".</p>
+                </div>
+
+                <div>
+                    <strong class="text-sm text-gray-800">Two-Tailed (≠)</strong>
+                    <p class="text-xs text-gray-600">"Changed", "Different", "Is there a relationship?", "Is the coin biased?".</p>
+                    <div class="mt-2 bg-orange-100 text-orange-800 text-xs p-2 rounded border border-orange-200">
+                        <strong>⚠ ALERT:</strong> For 2-tailed, you MUST divide the significance level ($\alpha$) by 2.
+                        <br>(e.g. 5% becomes 2.5% at each end).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="mt-8 text-center text-gray-400 text-sm">
+            <p>A-Level Statistics</p>
+        </div>
+    </div>
+    
+    <!-- MathJax for rendering formulas -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+    </script>
+    <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+</body>
+</html>
