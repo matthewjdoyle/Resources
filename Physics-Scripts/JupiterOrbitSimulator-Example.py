@@ -159,13 +159,15 @@ for i, name in enumerate(names):
     z = data[i, 2, :] - jup_pos[2, :]
     
     # Create time gradient (0 to 1)
-    # This determines the color along the path
-    t_norm = np.linspace(0, 1, len(x))
+    c_norm = np.linspace(0, 1, len(x))
+    
+    # Create spatial gradient (0 to 1)
+    c_norm = ( x - np.min(x) ) / (np.max(x) - np.min(x))
     
     # 3D Scatter with gradient coloring
     # s=0.5 makes a fine, smooth line-like appearance
     # alpha=0.8 allows for some blending
-    sc = ax_art.scatter(x, y, z, c=t_norm, cmap=cmaps[i % 4], 
+    sc = ax_art.scatter(x, y, z, c=c_norm, cmap=cmaps[i % 4], 
                         s=0.5, alpha=0.8, depthshade=True)
     
     # Add a bright "head" to the trail (current position)
