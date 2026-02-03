@@ -18,8 +18,6 @@ names = list(masses_dict.keys())
 masses = np.array(list(masses_dict.values()))
 
 # --- 2. INITIAL CONDITIONS (MANUAL / OFFLINE) ---
-# We place them on the X-axis with velocity on the Y-axis for circular orbits.
-# This bypasses the NASA download error entirely.
 print("Setting up initial conditions (Offline Mode)...", flush=True)
 
 # Format: [x, y, z, vx, vy, vz]
