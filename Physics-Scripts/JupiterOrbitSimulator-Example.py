@@ -145,10 +145,10 @@ ax_art.set_facecolor('black')
 cmaps = ['autumn', 'cool', 'winter', 'spring'] 
 
 # --- PLOTTING ---
-# 1. Plot Jupiter (The "Star" in the center)
+# Plot jupiter
 # We plot it twice: once solid, once large and transparent for a "glow" effect
 ax_art.plot([0], [0], [0], 'o', color='#ffcc00', markersize=6, zorder=20)
-ax_art.plot([0], [0], [0], 'o', color='#ffcc00', markersize=20, alpha=0.2, zorder=19)
+ax_art.plot([0], [0], [0], 'o', color='#ffcc00', markersize=20, alpha=0.1, zorder=19)
 
 for i, name in enumerate(names):
     if name == 'Jupiter': continue
@@ -170,9 +170,7 @@ for i, name in enumerate(names):
     sc = ax_art.scatter(x, y, z, c=c_norm, cmap=cmaps[i % 4], 
                         s=0.5, alpha=0.8, depthshade=True)
     
-    # Add a bright "head" to the trail (current position)
-    ax_art.scatter(x[-1], y[-1], z[-1], color='white', s=10, alpha=1.0)
-
+   
 
 # Force aspect ratio to be equal
 limit = 2.0e9 # 2 million km
