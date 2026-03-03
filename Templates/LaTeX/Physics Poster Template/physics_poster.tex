@@ -1,0 +1,405 @@
+% ==============================================================================
+% Physics Research Poster Template — tikzposter
+% ==============================================================================
+% A competition-quality poster template for physics research conferences.
+% Color scheme: Deep Purple & Emerald Green
+% Size: A0 Portrait (841 × 1189 mm)
+%
+% Compile with:  pdflatex physics_poster.tex
+%           or:  lualatex physics_poster.tex  (better font support)
+% ==============================================================================
+
+\documentclass[
+  25pt,                        % Base font scaling
+  a0paper,                     % A0 paper size
+  portrait,                    % Portrait orientation
+  margin=10mm,                 % Outer margins
+  innermargin=15mm,            % Padding inside blocks
+  blockverticalspace=15mm,     % Vertical space between blocks
+  colspace=15mm,               % Space between columns
+  subcolspace=8mm              % Space between subcolumns
+]{tikzposter}
+
+% =============================================================================
+% PACKAGES
+% =============================================================================
+
+\usepackage[T1]{fontenc}
+\usepackage{helvet}                    % Helvetica sans-serif
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{sfmath}                    % Sans-serif math
+\usepackage{amsmath,amssymb}
+\usepackage{physics}                   % Physics notation: \bra, \ket, \dv, etc.
+\usepackage{siunitx}                   % SI units: \SI{3e8}{\metre\per\second}
+% Resolve \qty conflict between physics and siunitx
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{qrcode}
+% \usepackage{hyperref}               % Optional: uncomment for digital-only posters
+% \usepackage{microtype}               % Optional: microtypography (uncomment if needed)
+\usepackage{setspace}
+\usepackage{multicol}
+
+% Tight lists
+\setlist{nosep, leftmargin=1.5em}
+
+% Increase line spacing for readability at distance
+\setstretch{1.25}
+
+% =============================================================================
+% CUSTOM COLOR SCHEME — Deep Purple & Emerald Green
+% =============================================================================
+
+\definecolorstyle{PhysicsGreenPurple}{
+  % Define base colors
+  \definecolor{DeepPurple}{RGB}{75,0,130}
+  \definecolor{MediumPurple}{RGB}{120,60,180}
+  \definecolor{LightPurple}{RGB}{220,208,240}
+  \definecolor{EmeraldGreen}{RGB}{0, 15, 13}
+  \definecolor{DarkGreen}{RGB}{0, 15, 13}
+  \definecolor{LightGreen}{RGB}{0, 15, 13}
+  \definecolor{NearBlack}{RGB}{33,33,33}
+  \definecolor{DarkGray}{RGB}{80,80,80}
+}{
+  % Background Colors
+  \colorlet{backgroundcolor}{white}
+  \colorlet{framecolor}{DeepPurple}
+  % Title Colors
+  \colorlet{titlefgcolor}{white}
+  \colorlet{titlebgcolor}{DeepPurple}
+  % Block Colors
+  \colorlet{blocktitlebgcolor}{DeepPurple}
+  \colorlet{blocktitlefgcolor}{white}
+  \colorlet{blockbodybgcolor}{white}
+  \colorlet{blockbodyfgcolor}{NearBlack}
+  % Inner Block Colors
+  \colorlet{innerblocktitlebgcolor}{EmeraldGreen}
+  \colorlet{innerblocktitlefgcolor}{white}
+  \colorlet{innerblockbodybgcolor}{LightGreen}
+  \colorlet{innerblockbodyfgcolor}{NearBlack}
+}
+
+\usecolorstyle{PhysicsGreenPurple}
+
+% Use a clean block style
+\useblockstyle{Default}
+
+% Remove the tikzposter attribution logo
+\tikzposterlatexaffectionproofoff
+
+% =============================================================================
+% CUSTOM HIGHLIGHT BOX (green accent)
+% =============================================================================
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+\newtcolorbox{highlightbox}[1][]{%
+  enhanced,
+  colback=LightGreen,
+  colframe=EmeraldGreen,
+  coltitle=white,
+  fonttitle=\bfseries\large,
+  boxrule=2pt,
+  arc=4mm,
+  left=8mm, right=8mm, top=4mm, bottom=4mm,
+  #1
+}
+
+\newtcolorbox{purplebox}[1][]{%
+  enhanced,
+  colback=LightPurple,
+  colframe=DeepPurple,
+  coltitle=white,
+  fonttitle=\bfseries\large,
+  boxrule=2pt,
+  arc=4mm,
+  left=8mm, right=8mm, top=4mm, bottom=4mm,
+  #1
+}
+
+% =============================================================================
+% POSTER METADATA — CUSTOMIZE BELOW
+% =============================================================================
+
+\title{\textbf{Your Research Title: Concise and Descriptive}}
+
+\author{%
+  Author One\textsuperscript{1},
+  Author Two\textsuperscript{2},
+  \underline{Presenting Author}\textsuperscript{1}%
+}
+
+\institute{%
+  \textsuperscript{1}Department of Physics, University Name, City, Country \quad
+  \textsuperscript{2}Research Institute Name, City, Country%
+}
+
+% Logos flanking the title (replace with your institution logos)
+% Uncomment and update paths when you have logo files:
+% \titlegraphic{%
+%   \includegraphics[width=0.08\textwidth]{figures/logo_left.pdf}%
+%   \hfill
+%   \includegraphics[width=0.08\textwidth]{figures/logo_right.pdf}%
+% }
+
+% =============================================================================
+% BEGIN DOCUMENT
+% =============================================================================
+
+\begin{document}
+
+\maketitle
+
+% =============================================================================
+% MAIN CONTENT — 3 COLUMN LAYOUT
+% =============================================================================
+
+\begin{columns}
+
+% =============================================================================
+% LEFT COLUMN
+% =============================================================================
+\column{0.33}
+
+\block{Introduction}{
+  \textbf{Background}
+
+  Provide 1--2 sentences of context establishing the importance of your
+  research area and the physical system under study.
+
+  \vspace{0.5cm}
+
+  \textbf{Motivation}
+
+  What open question or discrepancy does this work address? Why is it
+  significant for the broader physics community?
+
+  \vspace{0.5cm}
+
+  \textbf{Objective}
+
+  \begin{highlightbox}
+    We investigate \textbf{[physical phenomenon]} using
+    \textbf{[technique/method]} to determine \textbf{[key quantity or
+    relationship]}.
+  \end{highlightbox}
+}
+
+\block{Theoretical Framework}{
+  \textbf{Key Equations}
+
+  The dynamics are governed by the Hamiltonian:
+  \begin{equation}
+    \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r})
+    \label{eq:hamiltonian}
+  \end{equation}
+
+  The time evolution of the system is given by:
+  \begin{equation}
+    i\hbar \pdv{\Psi}{t} = \hat{H}\Psi
+    \label{eq:schrodinger}
+  \end{equation}
+
+  \vspace{0.3cm}
+
+  \textbf{Key Parameters}
+  \begin{itemize}
+    \item Coupling constant: $g = \qty{1.43e-3}{}$
+    \item Temperature range: $T = \qtyrange{4.2}{300}{\kelvin}$
+    \item Energy scale: $E_0 = \qty{13.6}{\electronvolt}$
+  \end{itemize}
+}
+
+\block{Experimental Setup / Methods}{
+  \textbf{Apparatus}
+  \begin{itemize}
+    \item Detector: Description and key specifications
+    \item Source: Beam energy, luminosity, or flux
+    \item Data acquisition: Sampling rate, channels
+  \end{itemize}
+
+  \vspace{0.5cm}
+
+  % Replace with your own methods diagram
+  \begin{center}
+    \textcolor{DarkGray}{\rule{0.85\linewidth}{0.4pt}}\\[0.5cm]
+    {\Large\textcolor{DarkGray}{\textit{[Experimental schematic or
+    methods flowchart]}}}\\[0.3cm]
+    {\large\texttt{figures/setup\_diagram.pdf}}\\[0.5cm]
+    \textcolor{DarkGray}{\rule{0.85\linewidth}{0.4pt}}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \textbf{Analysis}
+  \begin{itemize}
+    \item Monte Carlo simulations ($N = 10^6$ events)
+    \item $\chi^2$ fitting with systematic uncertainties
+    \item Software: ROOT, Python (NumPy, SciPy)
+  \end{itemize}
+}
+
+% =============================================================================
+% MIDDLE COLUMN
+% =============================================================================
+\column{0.33}
+
+\block{Results: Primary Finding}{
+  Brief statement of the main result. What is the key observation
+  or measurement?
+
+  \vspace{0.5cm}
+
+  % Replace with your primary result figure
+  \begin{center}
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}\\[1cm]
+    {\Large\textcolor{DarkGray}{\textit{[Primary result figure ---
+    spectrum, phase diagram, or data plot]}}}\\[0.5cm]
+    {\large\texttt{figures/result\_main.pdf}}\\[1cm]
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \textbf{Figure~1:} Measured spectrum showing the resonance at
+  $E = \qty{125.3 \pm 0.4}{\giga\electronvolt}$.
+  Error bars represent statistical uncertainties;
+  shaded band shows systematic uncertainty.
+  The fit yields $\chi^2/\text{ndf} = 1.03$.
+}
+
+\block{Results: Secondary Finding}{
+  Description of the second key result or supporting measurement.
+
+  \vspace{0.5cm}
+
+  % Replace with your secondary result figure
+  \begin{center}
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}\\[1cm]
+    {\Large\textcolor{DarkGray}{\textit{[Secondary result ---
+    comparison, correlation, or trend]}}}\\[0.5cm]
+    {\large\texttt{figures/result\_secondary.pdf}}\\[1cm]
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \textbf{Figure~2:} Temperature dependence of the order parameter.
+  Solid line: theoretical prediction. Data points: experimental
+  measurements ($n = 50$ per temperature).
+  Agreement within $2\sigma$ across the full range.
+}
+
+% =============================================================================
+% RIGHT COLUMN
+% =============================================================================
+\column{0.33}
+
+\block{Results: Additional Analysis}{
+  Third key result, systematic study, or validation measurement.
+
+  \vspace{0.5cm}
+
+  % Replace with your third figure
+  \begin{center}
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}\\[1cm]
+    {\Large\textcolor{DarkGray}{\textit{[Additional analysis ---
+    systematic uncertainties, simulation comparison]}}}\\[0.5cm]
+    {\large\texttt{figures/result\_analysis.pdf}}\\[1cm]
+    \textcolor{DarkGray}{\rule{0.9\linewidth}{0.4pt}}
+  \end{center}
+
+  \vspace{0.3cm}
+
+  \textbf{Figure~3:} Comparison of measured cross-section with
+  Standard Model prediction (dashed) and BSM scenario (dotted).
+  The data favour the SM with $p > 0.95$.
+
+  \vspace{0.5cm}
+
+  \begin{highlightbox}[title=Summary of Measurements]
+    \begin{tabular}{@{}lcc@{}}
+      \toprule
+      \textbf{Observable} & \textbf{Measured} & \textbf{Predicted} \\
+      \midrule
+      $\sigma$ [fb] & $48.3 \pm 2.1$ & $47.8 \pm 1.5$ \\
+      $m$ [\unit{\giga\electronvolt}] & $125.3 \pm 0.4$ & $125.1$ \\
+      $\Gamma$ [\unit{\mega\electronvolt}] & $4.1 \pm 0.6$ & $4.07$ \\
+      \bottomrule
+    \end{tabular}
+  \end{highlightbox}
+}
+
+\block{Conclusions}{
+  \textbf{Key Findings}
+  \begin{itemize}
+    \item \textbf{Finding 1:} Primary result with quantified significance
+    \item \textbf{Finding 2:} Secondary result and its physical implication
+    \item \textbf{Finding 3:} Agreement or tension with theoretical predictions
+  \end{itemize}
+
+  \vspace{0.5cm}
+
+  \textbf{Outlook}
+  \begin{itemize}
+    \item Planned improvements (higher statistics, new detector, etc.)
+    \item Broader impact on the field
+    \item Next experimental campaign or theoretical extension
+  \end{itemize}
+}
+
+\block{Scan for More}{
+  \begin{center}
+    \qrcode[height=5cm]{https://doi.org/10.1234/your-paper}\\[0.5cm]
+    {\large Full paper, data, and analysis code}
+  \end{center}
+}
+
+\end{columns}
+
+% =============================================================================
+% FOOTER — Full Width
+% =============================================================================
+
+\block[titleoffsety=-8mm,bodyoffsety=-8mm]{}{
+  \footnotesize
+  \begin{minipage}{0.63\textwidth}
+    \textbf{References}
+    \begin{enumerate}[label={[\arabic*]}]
+      \item A.~Author \textit{et al.} (2025). Title of paper.
+            \textit{Phys.\ Rev.\ Lett.}\ \textbf{130}, 012345.
+      \item B.~Author \textit{et al.} (2024). Title of paper.
+            \textit{JHEP}\ \textbf{04}, 067.
+      \item C.~Author \textit{et al.} (2024). Title of paper.
+            \textit{Nature Physics}\ \textbf{20}, 123--130.
+      \item D.~Author \textit{et al.} (2023). Title of paper.
+            \textit{Eur.\ Phys.\ J.\ C}\ \textbf{83}, 456.
+    \end{enumerate}
+
+    \vspace{0.3cm}
+
+    \textbf{Acknowledgements} \quad
+    This work was supported by [Funding Agency] (Grant No.\ XXXX).
+    We thank [Collaborators/Facilities] for [contribution].
+
+    \vspace{0.2cm}
+
+    \textbf{Contact:} \quad
+    presenter.email@university.edu
+    \quad $\vert$ \quad
+    labname.university.edu
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.28\textwidth}
+    \raggedleft
+    {\normalsize Conference Name 2026}\\
+    Location, Dates\\
+    Poster \#XXX\\[0.5cm]
+    \textcolor{EmeraldGreen}{\rule{0.8\linewidth}{2pt}}
+  \end{minipage}
+}
+
+\end{document}
