@@ -3,7 +3,9 @@
     Numerical Integration (Quadrature)
     =====================================
     Three classical quadrature rules with convergence analysis and an
-    artistic visualisation of how each rule approximates a smooth curve.
+    artistic visualisation and a physics simulation of Fresnel/Fraunhofer
+    diffraction through a triangular aperture (the diffraction integral
+    is itself a numerical-integration problem, evaluated via FFT).
 
     Methods covered:
         1. Composite Trapezoidal Rule   (O(h²))
@@ -192,80 +194,184 @@ plt.close(fig2)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# --- 5. ARTISTIC DARK FIGURE ---
+# --- 5. DIFFRACTION THROUGH A TRIANGULAR APERTURE ---
+#     The Fresnel diffraction integral is itself a numerical-integration
+#     problem: we evaluate ∬ U₀(x',y') · H(x-x',y-y',z) dx'dy' via FFT.
+#
+#     Two propagation methods are used depending on the Fresnel number:
+#       • Angular-spectrum method  (near-field, N_F ≳ 3)
+#       • Single-FFT Fresnel integral (far-field, N_F ≲ 3)
+#     The second method naturally rescales the output grid with z, avoiding
+#     the wrap-around aliasing that plagues the angular spectrum at large z.
 # ─────────────────────────────────────────────────────────────────────────────
+
+from matplotlib.animation import FuncAnimation, PillowWriter
+from matplotlib.colors import PowerNorm
+
+# --- Physical parameters ---
+wavelength = 532e-9          # 532 nm green laser
+k          = 2 * np.pi / wavelength
+side       = 0.5e-3          # equilateral triangle side length (0.5 mm)
+
+# --- Computational grid ---
+N     = 1024
+L     = 8.0e-3              # 8 mm grid extent
+dx    = L / N
+x     = np.linspace(-L/2, L/2, N, endpoint=False)
+X, Y  = np.meshgrid(x, x)
+
+# --- Triangular aperture mask (equilateral, centred at origin) ---
+h_tri    = side * np.sqrt(3) / 2
+v_top    = np.array([0,  2*h_tri/3])
+v_left   = np.array([-side/2, -h_tri/3])
+v_right  = np.array([ side/2, -h_tri/3])
+
+def _edge_sign(p, v1, v2):
+    """Positive if point p is on the interior side of edge v1→v2."""
+    return (v2[0]-v1[0])*(p[1]-v1[1]) - (v2[1]-v1[1])*(p[0]-v1[0])
+
+aperture = (
+    (_edge_sign(np.array([X, Y]), v_left, v_right)  >= 0) &
+    (_edge_sign(np.array([X, Y]), v_right, v_top)    >= 0) &
+    (_edge_sign(np.array([X, Y]), v_top,   v_left)   >= 0)
+).astype(np.float64)
+
+# --- Frequency grid (for angular-spectrum method) ---
+fx = np.fft.fftfreq(N, d=dx)
+FX, FY = np.meshgrid(fx, fx)
+A0 = np.fft.fft2(aperture)
+
+# Centred coordinates (for single-FFT Fresnel method)
+x1 = (np.arange(N) - N // 2) * dx
+X1, Y1 = np.meshgrid(x1, x1)
+
+
+def compute_diffraction(z):
+    """
+    Compute diffraction intensity at distance z.
+
+    Uses the angular-spectrum method when the transfer function is
+    adequately sampled (validity = λzN/L² < 2), and the single-FFT
+    Fresnel integral otherwise.  Returns (I, dx_out).
+    """
+    validity = wavelength * z * N / L**2
+    if validity < 2.0:
+        H = np.exp(1j*k*z) * np.exp(-1j * np.pi * wavelength * z * (FX**2 + FY**2))
+        U = np.fft.ifft2(A0 * H)
+        return np.abs(U)**2, dx
+    else:
+        chirp = np.exp(1j * np.pi / (wavelength * z) * (X1**2 + Y1**2))
+        U = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(aperture * chirp)))
+        dx2 = wavelength * z / (N * dx)
+        return np.abs(U)**2, dx2
+
+
+# --- Propagation distances  (N_F = a² / λz) ---
+fresnel_targets = [50, 10, 3, 1, 0.3, 0.05]
+z_values = [side**2 / (wavelength * nf) for nf in fresnel_targets]
+patterns_data = [compute_diffraction(z) for z in z_values]
+
+
+# ── 5a. Static horizontal-strip figure ──────────────────────────────────────
 
 with plt.style.context('dark_background'):
 
-    fig3, ax = plt.subplots(figsize=(12, 7))
+    n_panels = len(fresnel_targets)
+    fig3, axes3 = plt.subplots(1, n_panels, figsize=(3.2 * n_panels, 4.0))
     fig3.patch.set_facecolor('#0d1117')
-    ax.set_facecolor('#0d1117')
 
-    # True curve — glowing white
-    ax.plot(x_dense, f(x_dense), color='white', lw=3, alpha=0.9, zorder=5)
-    ax.fill_between(x_dense, f(x_dense), alpha=0.10, color='white')
+    for idx, (ax, nf, z, (I, dx_out)) in enumerate(
+            zip(axes3, fresnel_targets, z_values, patterns_data)):
+        ax.set_facecolor('#0d1117')
 
-    # Overlay three rule approximations side by side in different colours
-    n_art = 8
-    art_colours = ['#ff6b6b', '#48dbfb', '#1dd1a1']
-    art_labels  = ["Trapezoidal", "Simpson's", "Gauss-Legendre"]
+        # Adaptive view: max of aperture-scale and diffraction-lobe scale
+        view_half = max(3 * side, 5 * wavelength * z / side)
+        crop_pix  = min(int(view_half / dx_out), N // 2 - 1)
+        crop_pix  = max(crop_pix, 16)
+        c = N // 2
+        I_crop = I[c - crop_pix : c + crop_pix, c - crop_pix : c + crop_pix]
+        I_norm = I_crop / I_crop.max() if I_crop.max() > 0 else I_crop
 
-    offsets = [-0.04, 0.0, 0.04]  # slight vertical offset for readability
-    for colour, label, offset in zip(art_colours, art_labels, offsets):
-        if label == "Trapezoidal":
-            x_n = np.linspace(a, b, n_art + 1)
-            for i in range(n_art):
-                xs = [x_n[i], x_n[i], x_n[i+1], x_n[i+1]]
-                ys = [offset, f(x_n[i]) + offset, f(x_n[i+1]) + offset, offset]
-                ax.fill(xs, ys, alpha=0.22, color=colour, zorder=2)
-                ax.plot([x_n[i], x_n[i+1]], [f(x_n[i]) + offset, f(x_n[i+1]) + offset],
-                        '-', color=colour, lw=1.5, alpha=0.8)
-            ax.plot(x_n, f(x_n), 'o', color=colour, ms=7, zorder=6, alpha=0.9, label=label)
+        ext = crop_pix * dx_out * 1e3  # half-extent in mm
+        ax.imshow(I_norm, extent=[-ext, ext, -ext, ext], origin='lower',
+                  cmap='inferno', norm=PowerNorm(gamma=0.45),
+                  interpolation='bicubic')
 
-        elif label == "Simpson's":
-            x_n = np.linspace(a, b, n_art + 1)
-            for i in range(0, n_art, 2):
-                xi = np.linspace(x_n[i], x_n[i+2], 80)
-                poly = np.polyfit([x_n[i], x_n[i+1], x_n[i+2]],
-                                  [f(x_n[i]), f(x_n[i+1]), f(x_n[i+2])], 2)
-                yi = np.polyval(poly, xi) + offset
-                ax.fill_between(xi, offset, yi, alpha=0.22, color=colour, zorder=2)
-                ax.plot(xi, yi, '-', color=colour, lw=1.5, alpha=0.6)
-            ax.plot(x_n, f(x_n) + offset, 'o', color=colour, ms=7, zorder=6, alpha=0.9, label=label)
+        ax.set_title(f"$N_F = {nf}$", color='white', fontsize=10, fontweight='bold')
+        ax.tick_params(colors='#555555', labelsize=7)
+        for sp in ax.spines.values():
+            sp.set_edgecolor('#2a2a2a')
+        ax.set_xlabel("x  (mm)", color='#aaaaaa', fontsize=9)
+        if idx == 0:
+            ax.set_ylabel("y  (mm)", color='#aaaaaa', fontsize=9)
+        else:
+            ax.set_yticklabels([])
 
-        else:  # Gauss-Legendre
-            gl_n, gl_w = roots_legendre(n_art)
-            gl_t_art = 0.5 * (b - a) * gl_n + 0.5 * (a + b)
-            gl_y_art = f(gl_t_art)
-            for xn, yn in zip(gl_t_art, gl_y_art):
-                ax.plot([xn, xn], [offset, yn + offset], '-', color=colour, lw=2, alpha=0.7, zorder=3)
-            ax.plot(gl_t_art, gl_y_art + offset, 'o', color=colour, ms=9, zorder=6,
-                    alpha=0.9, label=label)
-            ax.scatter(gl_t_art, gl_y_art + offset, s=120, color=colour, alpha=0.15, zorder=5)
+    axes3[0].text(0.03, 0.95, "Fresnel\n(near-field)",
+                  transform=axes3[0].transAxes, color='#48dbfb',
+                  fontsize=8, va='top', fontweight='bold')
+    axes3[-1].text(0.97, 0.95, "Fraunhofer\n(far-field)",
+                   transform=axes3[-1].transAxes, color='#1dd1a1',
+                   fontsize=8, va='top', ha='right', fontweight='bold')
 
-    ax.axhline(0, color='#333333', lw=1)
-    ax.set_xlim(-0.1, np.pi + 0.1); ax.set_ylim(-0.3, 1.45)
-    ax.set_xlabel("x", color='#aaaaaa', fontsize=12)
-    ax.set_ylabel("f(x) = sin(x)", color='#aaaaaa', fontsize=12)
-    ax.tick_params(colors='#555555')
-    for sp in ax.spines.values():
-        sp.set_edgecolor('#2a2a2a')
+    fig3.suptitle("D I F F R A C T I O N  —  T R I A N G U L A R   A P E R T U R E",
+                  color='white', alpha=0.75, fontsize=13, fontweight='bold', y=0.99)
+    fig3.text(0.5, 0.01,
+              "Fresnel diffraction integral via FFT  ·  λ = 532 nm  ·  a = 0.5 mm",
+              color='#888888', fontsize=8.5, ha='center')
 
-    legend = ax.legend(fontsize=11, loc='upper right',
-                       facecolor='#1a1a2e', edgecolor='#333333', labelcolor='white')
-
-    # Annotate exact value
-    ax.text(np.pi / 2, 1.25, f"∫ sin(x) dx = {exact}  (exact)",
-            color='white', alpha=0.6, fontsize=11, ha='center')
-
-    ax.set_title("N U M E R I C A L   I N T E G R A T I O N",
-                 color='white', alpha=0.75, fontsize=14, fontweight='bold', pad=14)
-
-    plt.tight_layout()
-    plt.savefig("quadrature_artistic.png", dpi=180, bbox_inches='tight',
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig("quadrature_diffraction.png", dpi=180, bbox_inches='tight',
                 facecolor=fig3.get_facecolor())
-    print("Saved: quadrature_artistic.png")
+    print("Saved: quadrature_diffraction.png")
     plt.show()
     plt.close(fig3)
+
+
+# ── 5b. Animated GIF: Fresnel → Fraunhofer sweep ────────────────────────────
+
+with plt.style.context('dark_background'):
+
+    n_frames = 60
+    z_sweep  = np.geomspace(z_values[0], z_values[-1], n_frames)
+    c        = N // 2
+
+    fig4, ax4 = plt.subplots(figsize=(5, 5))
+    fig4.patch.set_facecolor('#0d1117')
+    ax4.set_facecolor('#0d1117')
+
+    def _update(frame):
+        ax4.clear()
+        ax4.set_facecolor('#0d1117')
+
+        z  = z_sweep[frame]
+        nf = side**2 / (wavelength * z)
+        I, dx_out = compute_diffraction(z)
+
+        view_half = max(3 * side, 5 * wavelength * z / side)
+        crop_pix  = min(int(view_half / dx_out), N // 2 - 1)
+        crop_pix  = max(crop_pix, 16)
+        Ic = I[c - crop_pix : c + crop_pix, c - crop_pix : c + crop_pix]
+        Ic = Ic / Ic.max() if Ic.max() > 0 else Ic
+
+        ext = crop_pix * dx_out * 1e3
+        ax4.imshow(Ic, extent=[-ext, ext, -ext, ext], origin='lower',
+                   cmap='inferno', norm=PowerNorm(gamma=0.45),
+                   interpolation='bicubic')
+        ax4.text(0.03, 0.97, f"$N_F$ = {nf:.2f}", transform=ax4.transAxes,
+                 color='white', fontsize=11, va='top', fontweight='bold')
+        ax4.set_xlabel("x  (mm)", color='#aaaaaa', fontsize=10)
+        ax4.set_ylabel("y  (mm)", color='#aaaaaa', fontsize=10)
+        ax4.tick_params(colors='#555555')
+        for sp in ax4.spines.values():
+            sp.set_edgecolor('#2a2a2a')
+        ax4.set_title("Triangular Aperture Diffraction",
+                      color='white', alpha=0.75, fontsize=12, fontweight='bold')
+
+    anim = FuncAnimation(fig4, _update, frames=n_frames, interval=80, blit=False)
+    anim.save("quadrature_diffraction.gif", writer=PillowWriter(fps=12),
+              dpi=120, savefig_kwargs={'facecolor': fig4.get_facecolor()})
+    print("Saved: quadrature_diffraction.gif")
+    plt.close(fig4)
 
 print("\nAll plots complete.")

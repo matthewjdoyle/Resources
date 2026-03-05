@@ -1,0 +1,18 @@
+hide = []
+
+[settings]
+editor_command = "code"
+auto_clear_logs = true
+persist_args = true
+theme = "viridis"
+full_path_copy = true
+
+[tools."Mathematics/TSP/TSP-code.py"]
+name = "TSP Solver (Heuristic)"
+pinned = true
+description = "Solve the Travelling Salesman Problem using optimized heuristic algorithms. This tool finds a near-optimal route through a set of nodes."
+
+[tools."Physics/Jupiter-Satellite-Orbits/JupiterOrbitSimulator-Example.py"]
+name = "Jupiter Orbit Simulator"
+pinned = true
+description = "A physical simulation of satellite orbits around Jupiter, visualizing gravitational interaction and orbital stability."

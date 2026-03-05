@@ -1,4 +1,14 @@
-UK Finance Maths
-Algorithm Visualiser
+UK Finance Maths/
+Algorithm Visualiser/
+*docs/
 
-.DS_Store
+
+*.DS_Store
+Templates/LaTeX/.DS_Store
+Mathematics/.DS_Store
+*.pyc
+__pycache__/
+
+*GEMINI.md
+*copilot-instructions.md
+

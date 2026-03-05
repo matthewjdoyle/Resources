@@ -335,6 +335,15 @@
   <a class="nav-item" href="#quad-gauss">Gauss-Legendre</a>
   <a class="nav-item" href="#quad-convergence">Convergence</a>
   <a class="nav-item" href="#quad-practice">In Practice</a>
+
+  <span class="nav-section">§5 FFT &amp; Spectral Methods</span>
+  <a class="nav-item" href="#fft-dft">The DFT</a>
+  <a class="nav-item" href="#fft-cooley-tukey">Cooley-Tukey FFT</a>
+  <a class="nav-item" href="#fft-2d">2-D DFT</a>
+  <a class="nav-item" href="#fft-psd">Power Spectrum</a>
+  <a class="nav-item" href="#fft-spectral-diff">Spectral Differentiation</a>
+  <a class="nav-item" href="#fft-chebyshev">Chebyshev Polynomials</a>
+  <a class="nav-item" href="#fft-practice">In Practice</a>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
@@ -811,10 +820,10 @@ sol = solve_ivp(robertson, (0, 1e11), [1, 0, 0],
   </figure>
 
   <figure>
-    <img src="Numerical-Integration/quadrature_artistic.png" alt="Artistic quadrature figure" loading="lazy" />
+    <img src="Numerical-Integration/quadrature_diffraction.png" alt="Fresnel-to-Fraunhofer diffraction through a triangular aperture" loading="lazy" />
     <figcaption>
       <span class="fig-num">Figure 11.</span>
-      <strong>All three rules overlaid on $\sin(x)$</strong> with $n = 8$. Trapezoidal panels (red) show straight-line segments; Simpson's arcs (blue) curve through their midpoints; Gauss-Legendre nodes (green) are positioned asymmetrically but optimally — the vertical lines show where $f$ is evaluated, and their unequal spacing is the key to exponential convergence. <span class="run-ref">$ python Numerical-Integration/quadrature.py</span>
+      <strong>Fresnel → Fraunhofer diffraction through a triangular aperture</strong> (λ = 532 nm, side = 0.5 mm). Each panel shows the intensity pattern at increasing propagation distance $z$, parameterised by the Fresnel number $N_F = a^2/\lambda z$. At $N_F = 50$ the geometric shadow dominates with edge fringes; by $N_F \approx 1$ the pattern is transitioning to the far-field; at $N_F = 0.05$ the Fraunhofer limit is reached, displaying the characteristic six-fold diffraction spikes of a triangular aperture. The diffraction integral $\iint U_0\, H\, dx'\,dy'$ is itself a numerical-integration problem, evaluated here via FFT (angular-spectrum method for near-field, single-FFT Fresnel integral for far-field). <span class="run-ref">$ python Numerical-Integration/quadrature.py</span>
     </figcaption>
   </figure>
 
@@ -866,6 +875,197 @@ result = simpson(y_data, x=x_data)</code></pre>
     <tr><td>Periodic function over full period</td><td>Trapezoidal rule (exponentially convergent)</td></tr>
     <tr><td>Singularities or infinite limits</td><td><code>scipy.integrate.quad</code> with <code>points</code> or <code>limit</code> options</td></tr>
     <tr><td>Multi-dimensional integrals</td><td><code>scipy.integrate.dblquad</code> / <code>nquad</code> or Monte Carlo</td></tr>
+  </table>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!--  §5  FFT & SPECTRAL METHODS                                       -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <hr class="sec-divider"/>
+  <h2 class="section-heading" id="s5"><span class="section-num">§5</span>FFT &amp; Spectral Methods</h2>
+
+  <p>The Discrete Fourier Transform (DFT) and its fast algorithm (FFT) underpin an extraordinary range of numerical methods: signal processing, spectral analysis, fast convolution, PDE solvers, and the diffraction simulation in §4. This section develops the theory from the DFT definition through the Cooley-Tukey radix-2 FFT, extends it to two dimensions and power-spectrum estimation, and shows how Fourier and Chebyshev spectral methods achieve exponential convergence for smooth functions.</p>
+
+  <!-- ── The DFT ─────────────────────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-dft">5.1 The Discrete Fourier Transform</h3>
+
+  <p>Given a sequence $\{x_0, x_1, \ldots, x_{N-1}\}$, its DFT is the sequence of $N$ complex coefficients:</p>
+
+  <div class="box formula">
+    $$X_k = \sum_{n=0}^{N-1} x_n\, e^{-2\pi i\, kn/N}, \qquad k = 0, 1, \ldots, N-1$$
+    $$x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k\, e^{+2\pi i\, kn/N} \qquad \text{(inverse DFT)}$$
+  </div>
+
+  <p>In matrix form, $\mathbf{X} = \mathbf{F}_N \mathbf{x}$ where $(\mathbf{F}_N)_{kn} = \omega_N^{kn}$ with $\omega_N = e^{-2\pi i/N}$. The matrix $\mathbf{F}_N$ is symmetric and unitary (up to a factor of $\sqrt{N}$). Computing $\mathbf{X}$ via the matrix–vector product costs $O(N^2)$ — already useful for small $N$, but prohibitively slow for the millions of samples common in audio, imaging, and scientific computing.</p>
+
+  <!-- ── Cooley-Tukey FFT ────────────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-cooley-tukey">5.2 The Cooley-Tukey FFT</h3>
+
+  <p>The Fast Fourier Transform exploits the <em>periodicity</em> and <em>symmetry</em> of the complex exponentials to decompose an $N$-point DFT into two $N/2$-point DFTs. For $N$ a power of 2 (radix-2):</p>
+
+  <div class="box formula">
+    $$X_k = \underbrace{\sum_{m=0}^{N/2-1} x_{2m}\,\omega_{N/2}^{km}}_{\text{DFT of even-indexed}} + \;\omega_N^k\;\underbrace{\sum_{m=0}^{N/2-1} x_{2m+1}\,\omega_{N/2}^{km}}_{\text{DFT of odd-indexed}}$$
+    $$\text{Cost:}\quad T(N) = 2\,T(N/2) + O(N) \;\Longrightarrow\; T(N) = O(N \log N)$$
+  </div>
+
+  <p>This <strong>decimation-in-time</strong> splitting is applied recursively until the base case $N=1$ (identity). Each recursion level performs $N$ multiplications by <em>twiddle factors</em> $\omega_N^k$ and $N$ additions — the so-called <em>butterfly</em> operations. The result is a reduction from $O(N^2)$ to $O(N\log N)$: for a million-point transform, that is roughly a 50,000× speedup.</p>
+
+  <figure>
+    <img src="FFT-Spectral/fft_timing.png" alt="DFT / FFT timing comparison" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 12.</span>
+      <strong>Wall-clock timing: naïve DFT vs radix-2 FFT vs NumPy (C-optimised).</strong> The naïve implementation (red) follows the $O(N^2)$ reference slope; the recursive Python FFT (blue) follows $O(N\log N)$; NumPy's compiled implementation (green) is a further ~100× faster thanks to cache-aware memory access and SIMD vectorisation. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <div class="box warning">
+    <div class="box-title">⚠ Warning</div>
+    The recursive Python FFT shown here is pedagogical — do <strong>not</strong> use it in production. Python's function-call overhead makes it only ~2× faster than the naïve DFT for moderate $N$. Real FFT libraries (FFTW, NumPy/SciPy, cuFFT) use iterative, in-place algorithms with cache-optimal memory access patterns and hardware-specific SIMD intrinsics.
+  </div>
+
+  <!-- ── 2-D DFT ─────────────────────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-2d">5.3 The 2-D DFT</h3>
+
+  <p>For an $M \times N$ array $f[m, n]$, the 2-D DFT is defined as:</p>
+
+  <div class="box formula">
+    $$F[k_x, k_y] = \sum_{m=0}^{M-1}\sum_{n=0}^{N-1} f[m,n]\;e^{-2\pi i(k_x m/M + k_y n/N)}$$
+  </div>
+
+  <p>Because the exponential factors, this separates into a row-by-row 1-D DFT followed by a column-by-column 1-D DFT (or vice versa), reducing the cost from $O(M^2 N^2)$ to $O(MN\log(MN))$. The 2-D magnitude spectrum $|F[k_x, k_y]|$ reveals the spatial frequencies present in an image or field — each bright spot corresponds to a sinusoidal grating at a particular orientation and spacing. This is the same operation used by the angular-spectrum propagator in the §4 diffraction simulation.</p>
+
+  <figure>
+    <img src="FFT-Spectral/fft_2d_spectrum.png" alt="2-D DFT spatial-frequency decomposition" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 13.</span>
+      <strong>2-D DFT of a superimposed-grating pattern.</strong> Left: the spatial-domain test image built from four sinusoidal gratings at different angles and frequencies. Right: the log-magnitude spectrum $\log(1+|F|)$ after <code>fftshift</code>, with bright spots at the grating frequencies. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <!-- ── Power Spectral Density ──────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-psd">5.4 Power Spectral Density</h3>
+
+  <p>Given a signal $x(t)$ sampled at rate $f_s$, its <strong>power spectral density</strong> (PSD) describes how power is distributed across frequencies. The simplest estimator is the <em>periodogram</em>:</p>
+
+  <div class="box formula">
+    $$\hat{S}(f_k) = \frac{2}{N f_s}\,|X_k|^2, \qquad f_k = \frac{k\,f_s}{N}$$
+  </div>
+
+  <p>The periodogram is an unbiased but <em>inconsistent</em> estimator — its variance does not decrease with more data, making it noisy. <strong>Welch's method</strong> fixes this by splitting the signal into overlapping segments, windowing each segment (e.g., Hann window), computing the periodogram of each, and averaging. This trades frequency resolution for reduced variance — the standard approach in practice.</p>
+
+  <p>Windowing matters because a finite-length record effectively multiplies the signal by a rectangular window, whose Fourier transform has large sidelobes that leak power between frequency bins (<em>spectral leakage</em>). Smooth windows like Hann or Hamming taper the edges to zero, suppressing sidelobes at the cost of a wider main lobe.</p>
+
+  <figure>
+    <img src="FFT-Spectral/fft_power_spectrum.png" alt="Power spectral density estimation" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 14.</span>
+      <strong>PSD estimation of three sinusoids (50, 120, 300 Hz) buried in Gaussian noise.</strong> Top: time-domain signal (grey) with clean signal overlay (red). Middle: the raw periodogram is noisy but shows spectral peaks at the true frequencies. Bottom: Welch's method with a Hann window produces a much smoother estimate, clearly revealing all three components. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <!-- ── Spectral Differentiation ────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-spectral-diff">5.5 Spectral Differentiation</h3>
+
+  <p>For periodic functions on $[0, 2\pi)$, differentiation in the Fourier domain is exact: if $f(x) = \sum_k \hat{f}_k e^{ikx}$, then $f'(x) = \sum_k (ik)\hat{f}_k e^{ikx}$. In discrete form:</p>
+
+  <div class="box formula">
+    $$\widehat{f'}_k = ik\,\hat{f}_k \qquad\Longrightarrow\qquad f'_n = \text{IFFT}\!\left(\,ik\;\text{FFT}(f_n)\,\right)$$
+  </div>
+
+  <p>For smooth periodic functions, this achieves <strong>spectral (exponential) convergence</strong> — the error decreases faster than any power of $N$. Compare this with finite-difference stencils, which converge at fixed algebraic rates: $O(h^2)$ for the 2nd-order centred stencil, $O(h^4)$ for the 4th-order stencil, regardless of how smooth $f$ is.</p>
+
+  <figure>
+    <img src="FFT-Spectral/fft_spectral_diff.png" alt="Spectral vs finite-difference differentiation" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 15.</span>
+      <strong>Differentiation error for $f(x)=\sin(3x)+\cos(7x)$.</strong> The Fourier spectral method (green) reaches machine precision at $N \approx 20$ points. The 2nd-order and 4th-order finite-difference stencils converge polynomially and require hundreds of points for comparable accuracy. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <div class="box warning">
+    <div class="box-title">⚠ Warning</div>
+    Spectral differentiation assumes <strong>periodicity</strong>. For non-periodic functions it introduces Gibbs-like oscillations at the boundaries. Use Chebyshev spectral methods (§5.6) for non-periodic problems on bounded intervals.
+  </div>
+
+  <!-- ── Chebyshev Polynomials ───────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-chebyshev">5.6 Chebyshev Polynomials &amp; Spectral Convergence</h3>
+
+  <p>When $f$ is not periodic, Fourier methods lose their exponential convergence. <strong>Chebyshev spectral methods</strong> recover it by expanding $f$ in Chebyshev polynomials $T_n(x) = \cos(n\cos^{-1}x)$ on $[-1,1]$. The key is to sample at the <em>Chebyshev–Gauss–Lobatto nodes</em>:</p>
+
+  <div class="box formula">
+    $$x_j = \cos\!\left(\frac{j\pi}{N}\right), \qquad j = 0, 1, \ldots, N$$
+  </div>
+
+  <p>These nodes cluster quadratically near the endpoints, precisely counteracting the Runge phenomenon that plagues equispaced polynomial interpolation. For analytic functions, the interpolation error converges <em>geometrically</em> (exponentially) in $N$, while equispaced interpolation may <em>diverge</em>.</p>
+
+  <p>For functions with discontinuities, no polynomial method can avoid the <strong>Gibbs phenomenon</strong>: oscillations near the jump that persist (at ~9% overshoot) as $N \to \infty$. The oscillations narrow with increasing $N$, but their amplitude does not decrease.</p>
+
+  <figure>
+    <img src="FFT-Spectral/fft_chebyshev.png" alt="Chebyshev vs equispaced interpolation" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 16.</span>
+      <strong>Chebyshev vs equispaced interpolation.</strong> Top-left: equispaced nodes on $1/(1+25x^2)$ show wild oscillations at the edges (Runge's phenomenon) that worsen with $n$. Top-right: Chebyshev nodes stay stable and converge. Bottom-left: convergence plot — equispaced error explodes exponentially while Chebyshev error shrinks exponentially. Bottom-right: even Chebyshev nodes cannot avoid the Gibbs phenomenon at a discontinuity, though the oscillations localise near the jump. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="FFT-Spectral/fft_spectral_artistic.png" alt="Fourier reconstruction from noisy coefficients" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 17.</span>
+      <strong>Signal reconstruction from partial Fourier coefficients.</strong> A composite signal (4 sinusoids, white) is corrupted by Gaussian noise (grey). By retaining only the largest-magnitude Fourier coefficients — 4 (red), 8 (yellow), 16 (cyan), 40 (green) — the original waveform is progressively recovered. The bottom panel shows the frequency-domain view: coloured dots mark which spectral bins are kept at each level. <span class="run-ref">$ python FFT-Spectral/fft_spectral.py</span>
+    </figcaption>
+  </figure>
+
+  <!-- ── In Practice ────────────────────────────────────────────── -->
+  <h3 class="sub-heading" id="fft-practice">5.7 Implementation &amp; When to Use</h3>
+
+  <div class="box inprac">
+    <div class="box-title">✦ In Practice</div>
+    Use <strong><code>scipy.fft</code></strong> for FFTs — it is faster than <code>numpy.fft</code> (multi-threaded, supports real-valued transforms natively), and provides <code>rfft</code>/<code>irfft</code> for real signals (nearly 2× faster and half the memory). For power spectra, use <strong><code>scipy.signal.welch</code></strong> rather than computing the periodogram manually. For spectral methods on non-periodic domains, use Chebyshev nodes with barycentric interpolation — <code>numpy.polynomial.chebyshev</code> or the <code>chebfun</code> package provide production-grade implementations.
+  </div>
+
+  <h4 class="minor-heading">FFTs — real signals, zero-padding, normalisation</h4>
+  <pre><code>from scipy.fft import rfft, rfftfreq, irfft
+import numpy as np
+
+# Real-valued FFT (only positive frequencies, N//2+1 coefficients)
+x = np.random.randn(1024)
+X = rfft(x)                             # shape: (513,)
+freqs = rfftfreq(len(x), d=1/1000.0)    # Hz
+
+# Zero-pad for finer frequency grid (does NOT add information)
+X_padded = rfft(x, n=4096)              # 4× zero-padding
+
+# Inverse
+x_back = irfft(X, n=len(x))
+assert np.allclose(x, x_back)</code></pre>
+
+  <h4 class="minor-heading">Power spectrum via Welch's method</h4>
+  <pre><code>from scipy.signal import welch
+
+f, Pxx = welch(signal, fs=1000, window='hann',
+               nperseg=256, noverlap=128)
+# f: frequency array (Hz)
+# Pxx: power spectral density (V²/Hz)</code></pre>
+
+  <h4 class="minor-heading">Spectral differentiation (periodic functions)</h4>
+  <pre><code>def spectral_diff(f_vals, L=2*np.pi):
+    N = len(f_vals)
+    F = np.fft.fft(f_vals)
+    k = np.fft.fftfreq(N, d=L / (2*np.pi*N))
+    if N % 2 == 0:
+        F[N//2] = 0          # zero Nyquist mode for real result
+    return np.real(np.fft.ifft(1j * k * F))</code></pre>
+
+  <h4 class="minor-heading">Choosing a method</h4>
+  <table class="cmp-table">
+    <tr><th>Situation</th><th>Recommended method</th></tr>
+    <tr><td>General-purpose FFT (real data)</td><td><code>scipy.fft.rfft</code> / <code>irfft</code></td></tr>
+    <tr><td>Power spectrum of a noisy signal</td><td><code>scipy.signal.welch</code> (Hann window, 50% overlap)</td></tr>
+    <tr><td>Differentiation of periodic functions</td><td>Fourier spectral method (FFT → multiply by $ik$ → IFFT)</td></tr>
+    <tr><td>Interpolation / differentiation on $[-1,1]$</td><td>Chebyshev nodes + barycentric formula</td></tr>
+    <tr><td>Fast convolution / correlation</td><td>FFT-based: <code>scipy.signal.fftconvolve</code></td></tr>
+    <tr><td>2-D image filtering</td><td><code>scipy.fft.fft2</code> / <code>ifft2</code> with frequency-domain mask</td></tr>
+    <tr><td>Solving periodic PDEs</td><td>Fourier pseudospectral + exponential time integration</td></tr>
   </table>
 
 </main>
