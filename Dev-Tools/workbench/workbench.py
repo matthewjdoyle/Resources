@@ -96,7 +96,7 @@ class ImagePreviewScreen(ModalScreen[None]):
         )
         self.query_one("#preview-nav-bar").display = len(self._images) > 1
         # Render at large width to fill the modal
-        preview_text = self._render_fn(image_path, width=90)
+        preview_text = self._render_fn(image_path, width=120, max_height=70)
         self.query_one("#preview-image", Static).update(preview_text)
 
     def action_prev_image(self) -> None:
@@ -206,7 +206,7 @@ class WorkbenchApp(App):
     #execution-header { height: 1; padding: 0 1; text-style: bold; }
     #execution-pane { height: 1fr; padding: 1; background: black; overflow-y: auto; }
     #controls-pane { height: auto; padding: 1; layout: horizontal; }
-    #visuals-pane { width: 44; padding: 1; overflow-y: auto; }
+    #visuals-pane { width: 54; padding: 1; overflow-y: auto; }
     #image-preview-static { width: 100%; height: auto; text-wrap: nowrap; content-align: center middle; }
     .nav-button { min-width: 8; margin: 0 1; border: none; }
     #open-image-button { width: 1fr; text-style: bold; border: none; margin-top: 1; }
@@ -220,7 +220,7 @@ class WorkbenchApp(App):
     Markdown H2 { text-style: bold; }
     HelpScreen, SettingsScreen, ImagePreviewScreen { align: center middle; background: rgba(0, 0, 0, 0.5); }
     #help-container, #settings-container { width: 70; height: auto; max-height: 90%; padding: 1 2; }
-    #preview-container { width: 100; height: auto; max-height: 95%; padding: 1 2; overflow-y: auto; }
+    #preview-container { width: 130; height: auto; max-height: 95%; padding: 1 2; overflow-y: auto; }
     #preview-title { width: 1fr; text-align: center; text-style: bold; margin-bottom: 1; }
     #preview-filename { width: 1fr; text-align: center; text-style: italic; margin-bottom: 1; }
     #preview-image { width: 100%; height: auto; text-wrap: nowrap; content-align: center middle; }
@@ -636,32 +636,31 @@ class WorkbenchApp(App):
         self.current_image_index = 0
         self._show_current_image()
 
-    def _render_image_preview(self, image_path: Path, width: int = 38) -> Text:
+    def _render_image_preview(self, image_path: Path, width: int = 46, max_height: int = 50) -> Text:
         """Render an image to a Rich Text object using Unicode half-blocks."""
         try:
             with Image.open(image_path) as img:
                 img = img.convert("RGB")
-                # Calculate height: each char is 2 vertical pixels
                 aspect_ratio = img.height / img.width
                 height = int(width * aspect_ratio)
-                if height > 40: # Cap height
-                    height = 40
+                if height > max_height:
+                    height = max_height
                     width = int(height / aspect_ratio)
-                
-                # Each character represents 2 vertical pixels (top/bottom)
+
                 img = img.resize((width, height * 2), Image.Resampling.LANCZOS)
-                
+
+                # Fast pixel access via raw bytes instead of per-pixel getpixel()
+                data = img.tobytes()
+                stride = width * 3
                 result = Text()
                 for y in range(0, height * 2, 2):
+                    row1 = y * stride
+                    row2 = (y + 1) * stride
                     for x in range(width):
-                        r1, g1, b1 = img.getpixel((x, y))
-                        r2, g2, b2 = img.getpixel((x, y + 1))
-                        
-                        # Use Unicode Lower Half Block '▄' (U+2584)
-                        # Top pixel is background color, Bottom pixel is foreground
+                        off = x * 3
                         style = Style(
-                            color=Color.from_rgb(r2, g2, b2),
-                            bgcolor=Color.from_rgb(r1, g1, b1)
+                            color=Color.from_rgb(data[row2 + off], data[row2 + off + 1], data[row2 + off + 2]),
+                            bgcolor=Color.from_rgb(data[row1 + off], data[row1 + off + 1], data[row1 + off + 2]),
                         )
                         result.append("▄", style=style)
                     result.append("\n")
