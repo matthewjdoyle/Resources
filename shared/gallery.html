@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Gallery — Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="title-bar">
+      <h1><a href="/index.html">Resources</a></h1>
+      <span class="subtitle">Image Gallery</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Navigation">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <span class="nav-section">Navigation</span>
+  <a class="nav-item" href="/index.html">← Dashboard</a>
+  <div id="sidebar-nav"></div>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<main>
+  <nav class="breadcrumb">
+    <a href="/index.html">Home</a>
+    <span class="sep">/</span> Gallery
+  </nav>
+
+  <h1 class="doc-title">Image Gallery</h1>
+  <p class="doc-meta"><span>All visualisations from the Resources collection</span></p>
+
+  <input id="gallery-search" type="search" placeholder="Filter by topic or filename…" aria-label="Filter gallery" />
+
+  <div class="gallery-grid" id="gallery-grid"></div>
+</main>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+
+<script src="nav.js"></script>
+<script src="toc.js"></script>
+<script>
+renderTOC('sidebar-nav', '/shared/gallery.html');
+
+var GALLERY = [
+  // Interpolation
+  { src: '/Mathematics/Numerical-Methods/Interpolation/interpolation_artistic.png',  topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: 'Interpolation artistic visualisation' },
+  { src: '/Mathematics/Numerical-Methods/Interpolation/interpolation_diagnostic.png', topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: 'Interpolation diagnostic plot' },
+  { src: '/Mathematics/Numerical-Methods/Interpolation/runges_phenomenon.png',        topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: "Runge's phenomenon" },
+  // Root Finding
+  { src: '/Mathematics/Numerical-Methods/Root-Finding/newton_fractal.png',            topic: 'Root Finding',         topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md',          alt: 'Newton fractal' },
+  { src: '/Mathematics/Numerical-Methods/Root-Finding/root_finding_diagnostic.png',   topic: 'Root Finding',         topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md',          alt: 'Root finding diagnostic' },
+  // ODE Solvers
+  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_adams_comparison.png',       topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'Adams method comparison' },
+  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_phase_space.png',            topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'ODE phase space' },
+  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_solvers_diagnostic.png',     topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'ODE solvers diagnostic' },
+  // Numerical Integration
+  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_convergence.png',  topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature convergence' },
+  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_diffraction.png',  topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature diffraction pattern' },
+  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_panels.png',       topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature panels' },
+  // FFT & Spectral
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_2d_spectrum.png',           topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: '2D FFT spectrum' },
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_chebyshev.png',             topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'Chebyshev spectral method' },
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_power_spectrum.png',        topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT power spectrum' },
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_spectral_artistic.png',     topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT spectral artistic' },
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_spectral_diff.png',         topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'Spectral differentiation' },
+  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_timing.png',                topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT timing benchmark' },
+  // Chaos & Dynamics
+  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_bifurcation_artistic.png',     topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Bifurcation diagram' },
+  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_lorenz_artistic.png',          topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Lorenz attractor' },
+  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_double_pendulum_artistic.png', topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Double pendulum' },
+  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_diagnostic.png',               topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Chaos diagnostic' },
+  // Reaction-Diffusion
+  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_turing_mosaic_artistic.png',  topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Turing mosaic pattern' },
+  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_reaction_fronts_artistic.png',topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Reaction fronts' },
+  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_diagnostic.png',              topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Reaction-diffusion diagnostic' },
+  // Physics
+  { src: '/Physics/Jupiter-Satellite-Orbits/Orbits Figure 2026-02-03 023129.png',     topic: 'Physics',              topicHref: 'https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits', alt: 'Jupiter satellite orbits' }
+];
+
+// Render gallery
+var grid = document.getElementById('gallery-grid');
+GALLERY.forEach(function(item) {
+  var file = item.src.split('/').pop();
+  var a = document.createElement('a');
+  a.className = 'gallery-card';
+  a.href = item.topicHref;
+  a.dataset.topic = item.topic.toLowerCase();
+  a.dataset.file = file.toLowerCase();
+  a.innerHTML =
+    '<figure>' +
+    '<img src="' + item.src + '" alt="' + item.alt + '" loading="lazy" />' +
+    '<figcaption>' + item.topic + '</figcaption>' +
+    '</figure>';
+  // Open lightbox on image click, not card navigate
+  a.querySelector('img').addEventListener('click', function(e) {
+    e.preventDefault();
+    openLightbox(item.src, item.alt);
+  });
+  grid.appendChild(a);
+});
+
+// Search filter
+document.getElementById('gallery-search').addEventListener('input', function() {
+  var q = this.value.toLowerCase();
+  var cards = grid.querySelectorAll('.gallery-card');
+  cards.forEach(function(card) {
+    var match = !q || card.dataset.topic.includes(q) || card.dataset.file.includes(q);
+    card.classList.toggle('hidden', !match);
+  });
+});
+
+// Lightbox
+var lightbox = document.getElementById('lightbox');
+var lightboxImg = document.getElementById('lightbox-img');
+
+function openLightbox(src, alt) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt;
+  lightbox.classList.add('open');
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lightboxImg.src = '';
+}
+lightbox.addEventListener('click', closeLightbox);
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>

@@ -10,6 +10,16 @@
   <link rel="stylesheet" href="shared/style.css" />
   <script src="shared/theme.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 </head>
 <body>
 
@@ -29,12 +39,7 @@
 <div class="layout">
 <nav class="sidebar" id="sidebar" aria-label="Navigation">
   <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
-  <span class="nav-section">Categories</span>
-  <a class="nav-item" href="#mathematics">Mathematics</a>
-  <a class="nav-item" href="#analysis">Analysis</a>
-  <a class="nav-item" href="#physics">Physics</a>
-  <a class="nav-item" href="#dev-tools">Dev-Tools</a>
-  <a class="nav-item" href="#templates">Templates</a>
+  <div id="sidebar-nav"></div>
   <div class="sidebar-bottom">
     <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources" target="_blank" rel="noopener">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -55,37 +60,37 @@
   <div class="category" id="mathematics">
     <h2 class="category-heading">Mathematics</h2>
     <div class="card-grid">
-      <a class="card" href="Mathematics/Numerical-Methods/Interpolation/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md">
         <h3>Interpolation</h3>
         <p>Lagrange polynomial, Newton's divided differences, cubic splines, and Runge's phenomenon.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/Root-Finding/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md">
         <h3>Root Finding</h3>
         <p>Bisection, Newton-Raphson, and secant methods with a Newton fractal visualisation.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/ODE-Solvers/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md">
         <h3>ODE Solvers</h3>
         <p>Forward Euler, Heun's (RK2), classic RK4, and Adams-Bashforth multi-step methods.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/Numerical-Integration/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md">
         <h3>Numerical Integration</h3>
         <p>Trapezoidal, Simpson's, and Gauss-Legendre quadrature with convergence analysis.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/FFT-Spectral/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md">
         <h3>FFT &amp; Spectral Methods</h3>
         <p>DFT, Cooley-Tukey FFT, power spectra, spectral differentiation, and Chebyshev polynomials.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/Chaos-Dynamics/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md">
         <h3>Chaos &amp; Dynamical Systems</h3>
         <p>Logistic map, bifurcation diagrams, Lyapunov exponents, Lorenz attractor, double pendulum.</p>
         <span class="tag">Python</span>
       </a>
-      <a class="card" href="Mathematics/Numerical-Methods/Reaction-Diffusion/">
+      <a class="card" href="shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md">
         <h3>Reaction-Diffusion</h3>
         <p>Gray-Scott model generating Turing patterns — spots, stripes, coral, and self-replicating structures.</p>
         <span class="tag">Python</span>
@@ -189,7 +194,10 @@
 </footer>
 
 <script src="shared/nav.js"></script>
+<script src="shared/toc.js"></script>
 <script>
+  renderTOC('sidebar-nav', null);
+
   fetch('README.md')
     .then(r => {
       if (!r.ok) throw new Error('Could not load README.md (' + r.status + ')');
@@ -197,6 +205,9 @@
     })
     .then(md => {
       document.getElementById('readme-content').innerHTML = marked.parse(md);
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([document.getElementById('readme-content')]);
+      }
     })
     .catch(err => {
       document.getElementById('readme-content').innerHTML = 

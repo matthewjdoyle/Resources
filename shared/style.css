@@ -124,9 +124,11 @@ nav.sidebar a.nav-item.topic-link {
   padding-left: 20px;
   font-weight: 500;
 }
-nav.sidebar a.nav-item.topic-link.current {
+nav.sidebar a.nav-item.topic-link.current,
+nav.sidebar a.nav-item.toc-item.current {
   color: var(--accent);
   font-weight: 600;
+  border-left-color: var(--accent);
 }
 
 /* Main content */
@@ -163,10 +165,9 @@ h4.minor-heading {
 
 /* ── Figures ────────────────────────────────────────────────── */
 figure {
-  background: var(--fig-bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--fig-border);
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   overflow: hidden;
   margin: 24px 0;
 }
@@ -433,6 +434,34 @@ a.card[href^="https://"]::after {
   color: var(--muted);
   opacity: 0.6;
 }
+
+/* ── TOC icon badges ────────────────────────────────────────────── */
+.ext-icon {
+  font-size: 10px;
+  opacity: 0.55;
+  vertical-align: super;
+  margin-left: 2px;
+}
+.pdf-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .04em;
+  background: var(--accent3); color: #fff;
+  border-radius: 3px; padding: 1px 4px;
+  vertical-align: middle; margin-left: 4px;
+}
+
+/* ── Gallery ─────────────────────────────────────────────────────── */
+.gallery-grid { columns: 3 260px; gap: 14px; }
+.gallery-card { break-inside: avoid; margin-bottom: 14px; display: block; }
+.gallery-card img { border-radius: 8px; width: 100%; display: block; cursor: zoom-in; }
+.gallery-card figcaption { font-size: 12px; padding: 5px 2px; }
+.gallery-card.hidden { display: none; }
+#gallery-search { width: 100%; padding: 9px 14px; font-size: 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); color: var(--text); margin-bottom: 20px; }
+#lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85);
+  z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
+#lightbox.open { display:flex; }
+#lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; }
 
 /* ── Site footer ───────────────────────────────────────────────── */
 .site-footer {
