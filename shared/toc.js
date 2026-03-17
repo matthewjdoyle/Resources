@@ -36,7 +36,9 @@ var SITE_TOC = [
   {
     label: 'Dev-Tools',
     items: [
+      { label: 'Overview',           href: '/shared/md.html?src=Dev-Tools/README.md' },
       { label: 'Repo Dashboard',     href: 'https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools', external: true },
+      { label: 'README Coverage',    href: 'https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools/readme-coverage.py', external: true },
       { label: 'Resource Workbench', href: '/shared/md.html?src=Dev-Tools/workbench/README.md' }
     ]
   },
