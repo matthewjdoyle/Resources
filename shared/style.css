@@ -76,11 +76,13 @@ header h1 a:hover { color: var(--accent); text-decoration: none; }
 header .subtitle { font-size: .8rem; color: var(--muted); }
 #theme-btn {
   background: var(--surface); border: 1px solid var(--border);
-  color: var(--text); border-radius: 6px; padding: 5px 13px;
-  cursor: pointer; font-size: 12.5px; transition: background .15s;
+  color: var(--text); border-radius: 8px; padding: 6px 14px;
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s ease;
 }
-#theme-btn:hover { background: var(--border); }
-#theme-btn:focus { outline: 2px solid #58a6ff; outline-offset: 2px; }
+#theme-btn:hover { background: var(--border); transform: translateY(-1px); }
+#theme-btn:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ── Layout: sidebar + content ──────────────────────────────── */
 .layout { display: flex; min-height: 100vh; }
@@ -268,11 +270,13 @@ p code, li code {
 
 /* ── Sidebar toggle ───────────────────────────────────────── */
 #hamburger-btn {
-  background: var(--surface); border: 1px solid var(--border);
-  color: var(--text); border-radius: 6px; padding: 4px 10px;
-  cursor: pointer; font-size: 20px; line-height: 1;
+  background: transparent; border: 1px solid transparent;
+  color: var(--text); border-radius: 6px; padding: 6px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease;
 }
-#hamburger-btn:focus { outline: 2px solid #58a6ff; outline-offset: 2px; }
+#hamburger-btn:hover { background: var(--surface); border-color: var(--border); }
+#hamburger-btn:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
 #sidebar-close-btn {
   display: none;
   background: none; border: none;
@@ -377,31 +381,42 @@ nav.sidebar {
   gap: 14px;
 }
 a.card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 18px 20px;
-  transition: border-color .15s, box-shadow .15s;
+  border-radius: 12px; padding: 20px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
   text-decoration: none;
   color: inherit;
 }
 a.card:hover {
   border-color: var(--accent);
-  box-shadow: 0 2px 12px rgba(88,166,255,.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   text-decoration: none;
 }
 a.card h3 {
-  font-size: .95rem; font-weight: 600; margin-bottom: 4px;
+  font-size: .95rem; font-weight: 600; margin-bottom: 6px;
   color: var(--text);
+  transition: color 0.25s ease;
+}
+a.card:hover h3 {
+  color: var(--accent);
 }
 a.card p {
-  font-size: 12.5px; color: var(--muted); margin-bottom: 10px;
-  line-height: 1.5;
+  font-size: 13px; color: var(--muted); margin-bottom: 14px;
+  line-height: 1.55;
 }
 .tag {
   display: inline-block;
-  font-size: 10.5px; background: var(--bg); border: 1px solid var(--border);
-  border-radius: 4px; padding: 1px 7px; margin-right: 4px;
+  font-size: 11px; font-weight: 500;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 2px 8px; margin-right: 6px; margin-top: auto;
   color: var(--muted);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+a.card:hover .tag {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ── External-link card indicator ──────────────────────────────── */

@@ -9,12 +9,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/style.css" />
   <script src="shared/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
 <header>
   <div class="header-actions">
-    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="title-bar">
       <h1>Resources</h1>
       <span class="subtitle">Scripts, references &amp; templates</span>
@@ -168,6 +171,13 @@
     </div>
   </div>
 
+  <!-- ── README ──────────────────────────────────────────────────── -->
+  <div class="category" id="readme">
+    <div id="readme-content">
+      <p style="color:var(--muted);">Loading README...</p>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -179,5 +189,19 @@
 </footer>
 
 <script src="shared/nav.js"></script>
+<script>
+  fetch('README.md')
+    .then(r => {
+      if (!r.ok) throw new Error('Could not load README.md (' + r.status + ')');
+      return r.text();
+    })
+    .then(md => {
+      document.getElementById('readme-content').innerHTML = marked.parse(md);
+    })
+    .catch(err => {
+      document.getElementById('readme-content').innerHTML = 
+        '<p style="color:var(--accent3);">' + err.message + '</p>';
+    });
+</script>
 </body>
 </html>
