@@ -71,7 +71,7 @@ function renderTOC(containerId, currentHref) {
       var cls = 'nav-item toc-item' + (isCurrent ? ' current' : '');
       var attrs = item.external ? ' target="_blank" rel="noopener"' : '';
       var label = item.label
-        + (item.pdf      ? ' <span class="pdf-badge">PDF</span>' : '')
+        + (item.pdf      ? ' <span class="pdf-badge">(PDF)</span>' : '')
         + (item.external ? ' <span class="ext-icon">↗</span>'    : '');
       html += '<a class="' + cls + '" href="' + item.href + '"' + attrs + '>' + label + '</a>';
     }

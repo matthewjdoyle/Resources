@@ -443,14 +443,14 @@ a.card[href^="https://"]::after {
   margin-left: 2px;
 }
 .pdf-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: .04em;
-  background: var(--accent3); color: #fff;
-  border-radius: 3px; padding: 1px 4px;
-  vertical-align: middle; margin-left: 4px;
+  font-size: 10px; font-weight: 400;
+  color: var(--muted);
+  margin-left: 3px;
 }
 
 /* ── Gallery ─────────────────────────────────────────────────────── */
-.gallery-grid { columns: 3 260px; gap: 14px; }
+main.main--wide { max-width: none; padding-left: 28px; padding-right: 28px; }
+.gallery-grid { column-width: 260px; gap: 14px; }
 .gallery-card { break-inside: avoid; margin-bottom: 14px; display: block; }
 .gallery-card img { border-radius: 8px; width: 100%; display: block; cursor: zoom-in; }
 .gallery-card figcaption { font-size: 12px; padding: 5px 2px; }
