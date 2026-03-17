@@ -119,9 +119,19 @@
       return r.text();
     })
     .then(function (md) {
-      document.getElementById('content').innerHTML = marked.parse(md);
-      if (window.MathJax && window.MathJax.typesetPromise) {
-        MathJax.typesetPromise([document.getElementById('content')]);
+      // Protect math from marked's markdown processing
+      var mathStore = [];
+      function saveMath(match) { mathStore.push(match); return '\x02MATH' + (mathStore.length - 1) + '\x03'; }
+      var safe = md
+        .replace(/\$\$[\s\S]*?\$\$/g, saveMath)
+        .replace(/\$[^\$\n]+?\$/g, saveMath);
+      var html = marked.parse(safe);
+      html = html.replace(/\x02MATH(\d+)\x03/g, function (_, i) { return mathStore[+i]; });
+      document.getElementById('content').innerHTML = html;
+      if (window.MathJax) {
+        MathJax.startup.promise.then(function () {
+          MathJax.typesetPromise([document.getElementById('content')]);
+        });
       }
     })
     .catch(function (err) {
