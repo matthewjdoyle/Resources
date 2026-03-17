@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… — Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1><a href="../index.html">Resources</a></h1>
+      <span class="subtitle" id="subtitle">Loading…</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Navigation">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <span class="nav-section">Navigation</span>
+  <a class="nav-item" href="../index.html">← Dashboard</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" id="github-link" href="https://github.com/matthewjdoyle/Resources" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<main>
+  <nav class="breadcrumb" id="breadcrumb"></nav>
+  <div id="content">
+    <p style="color:var(--muted);">Loading…</p>
+  </div>
+</main>
+</div>
+
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+(function () {
+  var src = new URLSearchParams(window.location.search).get('src');
+  if (!src) {
+    document.getElementById('content').innerHTML = '<p style="color:var(--accent3);">No <code>?src=</code> parameter provided.</p>';
+    return;
+  }
+
+  // Build breadcrumb
+  var parts = src.replace(/\/README\.md$/i, '').split('/');
+  var crumbHTML = '<a href="../index.html">Home</a>';
+  for (var i = 0; i < parts.length; i++) {
+    crumbHTML += ' <span class="sep">/</span> ' + parts[i];
+  }
+  document.getElementById('breadcrumb').innerHTML = crumbHTML;
+
+  // Set subtitle and title
+  var name = parts[parts.length - 1];
+  document.getElementById('subtitle').textContent = name;
+  document.title = name + ' — Resources';
+
+  // Set GitHub link to the folder containing this file
+  var folder = src.replace(/\/[^/]+$/, '');
+  document.getElementById('github-link').href =
+    'https://github.com/matthewjdoyle/Resources/tree/main/' + encodeURI(folder);
+
+  // Fetch and render
+  fetch('../' + src)
+    .then(function (r) {
+      if (!r.ok) throw new Error('Could not load ' + src + ' (' + r.status + ')');
+      return r.text();
+    })
+    .then(function (md) {
+      document.getElementById('content').innerHTML = marked.parse(md);
+    })
+    .catch(function (err) {
+      document.getElementById('content').innerHTML =
+        '<p style="color:var(--accent3);">' + err.message + '</p>';
+    });
+})();
+</script>
+
+</body>
+</html>

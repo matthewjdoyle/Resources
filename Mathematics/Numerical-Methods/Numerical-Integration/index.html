@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Numerical Integration — Numerical Methods</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <link rel="stylesheet" href="../../../shared/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <script src="../../../shared/theme.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1><a href="../../../index.html">Resources</a></h1>
+      <span class="subtitle">Numerical Integration</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Table of contents">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <a class="nav-item" href="../../../index.html">← Dashboard</a>
+  <span class="nav-section">Topics</span>
+  <a class="nav-item topic-link" href="../Interpolation/">Interpolation</a>
+  <a class="nav-item topic-link" href="../Root-Finding/">Root Finding</a>
+  <a class="nav-item topic-link" href="../ODE-Solvers/">ODE Solvers</a>
+  <a class="nav-item topic-link current" href="../Numerical-Integration/">Integration</a>
+  <a class="nav-item topic-link" href="../FFT-Spectral/">FFT &amp; Spectral</a>
+  <a class="nav-item topic-link" href="../Chaos-Dynamics/">Chaos &amp; Dynamics</a>
+  <a class="nav-item topic-link" href="../Reaction-Diffusion/">Reaction-Diffusion</a>
+  <span class="nav-section">On This Page</span>
+  <a class="nav-item" href="#quad-trap">Trapezoidal Rule</a>
+  <a class="nav-item" href="#quad-simp">Simpson's Rule</a>
+  <a class="nav-item" href="#quad-gauss">Gauss-Legendre</a>
+  <a class="nav-item" href="#quad-convergence">Convergence</a>
+  <a class="nav-item" href="#quad-practice">In Practice</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources/tree/main/Mathematics/Numerical-Methods/Numerical-Integration/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<main>
+  <div class="breadcrumb">
+    <a href="../../../">Resources</a><span class="sep">/</span>
+    <a href="../../">Mathematics</a><span class="sep">/</span>
+    Numerical Methods<span class="sep">/</span>
+    Numerical Integration
+  </div>
+  <h1 class="doc-title">Numerical Integration</h1>
+  <div class="doc-meta"><span>Python script: <code>quadrature.py</code></span></div>
+
+  <p>
+    Numerical quadrature approximates $I = \int_a^b f(x)\,dx$ when the antiderivative of
+    $f$ is unavailable or impractical.  All methods take the form of a weighted sum of
+    function values: $I \approx \sum_{i=1}^n w_i\,f(x_i)$.  The methods differ in how
+    nodes $x_i$ and weights $w_i$ are chosen.
+  </p>
+
+  <div class="run-ref">
+    <code>$ python quadrature.py</code>
+  </div>
+
+  <!-- 4.1 Composite Trapezoidal -->
+  <h2 id="quad-trap">4.1 Composite Trapezoidal Rule</h2>
+
+  <p>
+    Divide $[a,b]$ into $n$ equal panels of width $h = (b-a)/n$ and approximate the
+    integrand by a piecewise-linear function on each panel:
+  </p>
+
+  $$I_{\text{trap}} = \frac{h}{2}\Bigl[f(x_0) + 2\sum_{i=1}^{n-1} f(x_i) + f(x_n)\Bigr]$$
+
+  <p>
+    The error is $O(h^2)$ for general smooth functions.  A remarkable bonus: for
+    <strong>periodic functions</strong> integrated over a full period, the trapezoidal rule
+    converges exponentially fast due to the Euler-Maclaurin formula &mdash; all error terms
+    cancel when the derivatives at the endpoints match.
+  </p>
+
+  <!-- 4.2 Simpson's 1/3 Rule -->
+  <h2 id="quad-simp">4.2 Simpson's 1/3 Rule</h2>
+
+  <p>
+    Fit a quadratic through each pair of adjacent panels ($n$ must be even):
+  </p>
+
+  $$I_{\text{Simp}} = \frac{h}{3}\Bigl[f(x_0) + 4\sum_{\text{odd}\,i} f(x_i) + 2\sum_{\text{even}\,i} f(x_i) + f(x_n)\Bigr]$$
+
+  <p>
+    The error is $O(h^4)$ &mdash; two orders better than the trapezoidal rule for the same
+    number of function evaluations.  Simpson's rule is exact for polynomials up to degree 3
+    (a bonus order from the symmetry of the quadratic fit).
+  </p>
+
+  <figure>
+    <img src="quadrature_panels.png" alt="Trapezoidal and Simpson panels" />
+    <figcaption>Figure 1 &mdash; Comparison of trapezoidal (piecewise-linear) and Simpson
+    (piecewise-quadratic) panel approximations for a smooth integrand.  The shaded regions
+    show the area captured by each rule.</figcaption>
+  </figure>
+
+  <!-- 4.3 Gauss-Legendre -->
+  <h2 id="quad-gauss">4.3 Gauss-Legendre Quadrature</h2>
+
+  <p>
+    Instead of equally-spaced nodes, Gauss-Legendre quadrature chooses nodes $\xi_i$ and
+    weights $w_i$ on $[-1,1]$ to exactly integrate polynomials of degree up to $2n - 1$.
+    The integral over an arbitrary interval $[a,b]$ is obtained by a linear change of
+    variables:
+  </p>
+
+  $$\int_a^b f(x)\,dx = \frac{b-a}{2}\sum_{i=1}^{n} w_i\,f\!\left(\frac{b-a}{2}\,\xi_i + \frac{a+b}{2}\right)$$
+
+  <p>
+    With $n$ function evaluations, Gauss-Legendre achieves algebraic order $2n$, making it
+    far more efficient than Newton-Cotes rules of comparable cost.  The nodes are roots of
+    the Legendre polynomial $P_n(\xi)$ and the weights are determined analytically.
+  </p>
+
+  <!-- 4.4 Convergence -->
+  <h2 id="quad-convergence">4.4 Convergence</h2>
+
+  <p>
+    The convergence behaviour of each rule is determined by the smoothness of the integrand
+    and the distribution of nodes.  For analytic (infinitely differentiable) functions,
+    Gauss-Legendre quadrature converges exponentially in $n$, while Newton-Cotes rules
+    converge polynomially.  Integrands with singularities or discontinuities in derivatives
+    can degrade the convergence order and require adaptive strategies.
+  </p>
+
+  <figure>
+    <img src="quadrature_convergence.png" alt="Convergence of quadrature rules" />
+    <figcaption>Figure 2 &mdash; Log-log convergence plot showing error vs. number of
+    function evaluations for the trapezoidal rule, Simpson's rule, and Gauss-Legendre
+    quadrature applied to a smooth test function.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="quadrature_diffraction.png" alt="Fresnel diffraction integral" />
+    <figcaption>Figure 3 &mdash; Fresnel diffraction pattern computed by numerical
+    quadrature of the oscillatory Fresnel integral, demonstrating the practical application
+    of adaptive quadrature to physics problems.</figcaption>
+  </figure>
+
+  <!-- 4.5 In Practice -->
+  <h2 id="quad-practice">4.5 In Practice</h2>
+
+  <div class="box">
+    <strong>Recommended library:</strong>
+    <code>scipy.integrate.quad</code> &mdash; an adaptive Gauss-Kronrod integrator
+    (QUADPACK) that automatically subdivides the interval and handles endpoint
+    singularities.  For multi-dimensional integrals, use <code>dblquad</code>,
+    <code>tplquad</code>, or <code>nquad</code>.
+  </div>
+
+  <pre><code># Adaptive quadrature with error estimate
+from scipy.integrate import quad
+import numpy as np
+
+result, error = quad(lambda x: np.exp(-x**2), 0, np.inf)
+print(f"integral = {result:.12f}, est. error = {error:.2e}")
+</code></pre>
+
+  <pre><code># Fixed-order Gauss-Legendre quadrature
+from numpy.polynomial.legendre import leggauss
+
+nodes, weights = leggauss(20)           # 20-point rule on [-1, 1]
+a, b = 0, np.pi
+mapped = 0.5*(b - a)*nodes + 0.5*(a + b)
+I = 0.5*(b - a) * np.dot(weights, np.sin(mapped))
+</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>Recommended Method</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>General 1-D integral</td><td><code>scipy.integrate.quad</code></td></tr>
+      <tr><td>Smooth integrand, fixed budget</td><td>Gauss-Legendre</td></tr>
+      <tr><td>Periodic integrand over full period</td><td>Trapezoidal rule</td></tr>
+      <tr><td>Tabulated data (equally spaced)</td><td>Simpson's rule / <code>scipy.integrate.simpson</code></td></tr>
+      <tr><td>Multi-dimensional</td><td><code>nquad</code> or Monte Carlo</td></tr>
+      <tr><td>Oscillatory integrals</td><td>Filon / Levin methods</td></tr>
+    </tbody>
+  </table>
+
+  <div class="topic-nav"><a href="../ODE-Solvers/">&larr; Prev: ODE Solvers</a> <a href="../FFT-Spectral/">Next: FFT &amp; Spectral &rarr;</a></div>
+</main>
+</div>
+<script src="../../../shared/nav.js"></script>
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+</body>
+</html>

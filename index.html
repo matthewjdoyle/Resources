@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/style.css" />
+  <script src="shared/theme.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1>Resources</h1>
+      <span class="subtitle">Scripts, references &amp; templates</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Navigation">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <span class="nav-section">Categories</span>
+  <a class="nav-item" href="#mathematics">Mathematics</a>
+  <a class="nav-item" href="#analysis">Analysis</a>
+  <a class="nav-item" href="#physics">Physics</a>
+  <a class="nav-item" href="#dev-tools">Dev-Tools</a>
+  <a class="nav-item" href="#templates">Templates</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<div class="dashboard">
+
+  <div class="hero">
+    <h1>Resources</h1>
+    <p>A selection of scripts, templates and tools for solving problems.</p>
+  </div>
+
+  <!-- ── Mathematics ─────────────────────────────────────────────── -->
+  <div class="category" id="mathematics">
+    <h2 class="category-heading">Mathematics</h2>
+    <div class="card-grid">
+      <a class="card" href="Mathematics/Numerical-Methods/Interpolation/">
+        <h3>Interpolation</h3>
+        <p>Lagrange polynomial, Newton's divided differences, cubic splines, and Runge's phenomenon.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/Root-Finding/">
+        <h3>Root Finding</h3>
+        <p>Bisection, Newton-Raphson, and secant methods with a Newton fractal visualisation.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/ODE-Solvers/">
+        <h3>ODE Solvers</h3>
+        <p>Forward Euler, Heun's (RK2), classic RK4, and Adams-Bashforth multi-step methods.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/Numerical-Integration/">
+        <h3>Numerical Integration</h3>
+        <p>Trapezoidal, Simpson's, and Gauss-Legendre quadrature with convergence analysis.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/FFT-Spectral/">
+        <h3>FFT &amp; Spectral Methods</h3>
+        <p>DFT, Cooley-Tukey FFT, power spectra, spectral differentiation, and Chebyshev polynomials.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/Chaos-Dynamics/">
+        <h3>Chaos &amp; Dynamical Systems</h3>
+        <p>Logistic map, bifurcation diagrams, Lyapunov exponents, Lorenz attractor, double pendulum.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Numerical-Methods/Reaction-Diffusion/">
+        <h3>Reaction-Diffusion</h3>
+        <p>Gray-Scott model generating Turing patterns — spots, stripes, coral, and self-replicating structures.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="Mathematics/Hypothesis Testing/HypothesisTesting.html">
+        <h3>Hypothesis Testing</h3>
+        <p>Interactive decision tree for selecting statistical tests, with practice problems.</p>
+        <span class="tag">HTML</span><span class="tag">Mermaid</span>
+      </a>
+      <a class="card" href="shared/md.html?src=Mathematics/TSP/README.md">
+        <h3>Travelling Salesman Problem</h3>
+        <p>Node/edge generation and TSP solving via graph theory and optimisation.</p>
+        <span class="tag">Python</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Analysis ────────────────────────────────────────────────── -->
+  <div class="category" id="analysis">
+    <h2 class="category-heading">Analysis</h2>
+    <div class="card-grid">
+      <a class="card" href="shared/md.html?src=Analysis/Step-Detection/README.md">
+        <h3>Step Detection</h3>
+        <p>Detect abrupt step changes in noisy 1D data using rolling average and threshold.</p>
+        <span class="tag">MATLAB</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Physics ─────────────────────────────────────────────────── -->
+  <div class="category" id="physics">
+    <h2 class="category-heading">Physics</h2>
+    <div class="card-grid">
+      <a class="card" href="https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits" target="_blank" rel="noopener">
+        <h3>Jupiter Satellite Orbits</h3>
+        <p>N-body simulation of the Galilean moons with Keplerian orbit verification and 3D visualisations.</p>
+        <span class="tag">Python</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Dev-Tools ───────────────────────────────────────────────── -->
+  <div class="category" id="dev-tools">
+    <h2 class="category-heading">Dev-Tools</h2>
+    <div class="card-grid">
+      <a class="card" href="https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools" target="_blank" rel="noopener">
+        <h3>Repo Dashboard</h3>
+        <p>Terminal-based dashboard with language distribution, line counts, and colour-coded output.</p>
+        <span class="tag">Python</span>
+      </a>
+      <a class="card" href="shared/md.html?src=Dev-Tools/workbench/README.md">
+        <h3>Resource Workbench</h3>
+        <p>Textual-based TUI that auto-discovers and runs every script in the repo.</p>
+        <span class="tag">Python</span><span class="tag">Textual</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Templates ───────────────────────────────────────────────── -->
+  <div class="category" id="templates">
+    <h2 class="category-heading">Templates</h2>
+    <div class="card-grid">
+      <a class="card" href="shared/md.html?src=Templates/LaTeX/A3 Exam Poster Template/README.md">
+        <h3>A3 Exam Poster</h3>
+        <p>Large-format revision poster template for dense, organised review sheets.</p>
+        <span class="tag">LaTeX</span>
+      </a>
+      <a class="card" href="https://github.com/matthewjdoyle/Resources/tree/main/Templates/LaTeX/Popular%20Account%20Template" target="_blank" rel="noopener">
+        <h3>Scientific Article</h3>
+        <p>Clean, professional layout for scientific writing and reports.</p>
+        <span class="tag">LaTeX</span>
+      </a>
+      <a class="card" href="shared/md.html?src=Templates/LaTeX/Info Sheet/README.md">
+        <h3>Technical Reference</h3>
+        <p>Landscape A4 template for technical interview reference sheets with syntax highlighting.</p>
+        <span class="tag">LaTeX</span>
+      </a>
+      <a class="card" href="shared/md.html?src=Templates/LaTeX/Physics Poster Template/README.md">
+        <h3>Physics Poster</h3>
+        <p>Competition-quality A0 poster template with tikzposter, SI units, and QR codes.</p>
+        <span class="tag">LaTeX</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+
+<script src="shared/nav.js"></script>
+</body>
+</html>

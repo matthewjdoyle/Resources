@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reaction-Diffusion — Numerical Methods</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <link rel="stylesheet" href="../../../shared/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <script src="../../../shared/theme.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1><a href="../../../index.html">Resources</a></h1>
+      <span class="subtitle">Reaction-Diffusion</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Table of contents">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <a class="nav-item" href="../../../index.html">← Dashboard</a>
+  <span class="nav-section">Topics</span>
+  <a class="nav-item topic-link" href="../Interpolation/">Interpolation</a>
+  <a class="nav-item topic-link" href="../Root-Finding/">Root Finding</a>
+  <a class="nav-item topic-link" href="../ODE-Solvers/">ODE Solvers</a>
+  <a class="nav-item topic-link" href="../Numerical-Integration/">Integration</a>
+  <a class="nav-item topic-link" href="../FFT-Spectral/">FFT &amp; Spectral</a>
+  <a class="nav-item topic-link" href="../Chaos-Dynamics/">Chaos &amp; Dynamics</a>
+  <a class="nav-item topic-link current" href="../Reaction-Diffusion/">Reaction-Diffusion</a>
+  <span class="nav-section">On This Page</span>
+  <a class="nav-item" href="#rd-turing">Turing Patterns</a>
+  <a class="nav-item" href="#rd-gray-scott">Gray-Scott Model</a>
+  <a class="nav-item" href="#rd-numerics">Numerical Method</a>
+  <a class="nav-item" href="#rd-regimes">Pattern Regimes</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources/tree/main/Mathematics/Numerical-Methods/Reaction-Diffusion/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<main>
+  <div class="breadcrumb">
+    <a href="../../../">Resources</a><span class="sep">/</span>
+    <a href="../../">Mathematics</a><span class="sep">/</span>
+    Numerical Methods<span class="sep">/</span>
+    Reaction-Diffusion
+  </div>
+  <h1 class="doc-title">Reaction-Diffusion</h1>
+  <div class="doc-meta"><span>Python script: <code>reaction_diffusion.py</code></span></div>
+
+  <p>Reaction-diffusion systems couple local chemical reactions with spatial diffusion to produce remarkably complex patterns from simple rules. They are among the most visually striking examples of self-organisation in mathematics and nature.</p>
+
+  <h3 class="sub-heading" id="rd-turing">7.1 Turing Patterns</h3>
+
+  <p>In a landmark 1952 paper, Alan Turing showed that a spatially uniform steady state can become unstable when two interacting chemicals diffuse at different rates. The faster-diffusing species (the <em>inhibitor</em>) suppresses the slower one (the <em>activator</em>) at long range, while the activator reinforces itself locally. This interplay — <em>local activation, long-range inhibition</em> — drives spontaneous symmetry breaking, producing stable spatial patterns from near-homogeneous initial conditions.</p>
+
+  <p>The resulting structures — spots, stripes, and labyrinths — appear throughout biology: the pigmentation of zebra fish and sea shells, the spacing of hair follicles, and the patterning of leopard rosettes. They also arise in purely chemical systems such as the Belousov-Zhabotinsky reaction.</p>
+
+  <h3 class="sub-heading" id="rd-gray-scott">7.2 The Gray-Scott Model</h3>
+
+  <p>The Gray-Scott model tracks two chemical species: a substrate $U$ that is continuously fed into the system and an activator $V$ that catalyses its own production by consuming $U$. The PDEs are:</p>
+
+  <div class="box formula">
+    $$\frac{\partial U}{\partial t} = D_u \nabla^2 U - UV^2 + F(1 - U)$$
+    $$\frac{\partial V}{\partial t} = D_v \nabla^2 V + UV^2 - (F + k)V$$
+  </div>
+
+  <p>Here $F$ is the feed rate (replenishing $U$ and diluting $V$) and $k$ is the kill rate (removing $V$). The autocatalytic term $UV^2$ couples the two species: $V$ grows by consuming $U$, and two molecules of $V$ are required to convert one molecule of $U$.</p>
+
+  <p>The key requirement for pattern formation is $D_u > D_v$ — the substrate must diffuse faster than the activator. Typical values are $D_u = 0.16$ and $D_v = 0.08$ (a 2:1 ratio). The pair $(F, k)$ then selects which type of pattern emerges.</p>
+
+  <h3 class="sub-heading" id="rd-numerics">7.3 Numerical Method</h3>
+
+  <p>The Laplacian $\nabla^2$ is discretised on a uniform 2D grid using the standard 5-point stencil:</p>
+
+  <div class="box formula">
+    $$\nabla^2 u_{i,j} \approx \frac{u_{i+1,j} + u_{i-1,j} + u_{i,j+1} + u_{i,j-1} - 4\,u_{i,j}}{h^2}$$
+  </div>
+
+  <p>Periodic boundary conditions wrap the grid into a torus, eliminating edge effects. Time integration uses forward Euler: at each step the reaction and diffusion terms are evaluated explicitly and added to the current concentrations. This is simple to implement but imposes a stability constraint $\Delta t \lesssim h^2 / (4\,D_u)$ — the CFL-like condition for diffusion on a 2D grid.</p>
+
+  <p>In practice the simulation runs on a grid of $256 \times 256$ or larger, with $h = 1$ and $\Delta t = 1$, for $O(10^4)$ time steps until patterns stabilise.</p>
+
+  <figure>
+    <img src="rd_diagnostic.png" alt="Reaction-diffusion diagnostic: time evolution and parameter sweep" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 1.</span>
+      <strong>Time evolution and parameter sweep.</strong> Upper row: snapshots of the $V$ concentration field at successive time steps showing pattern emergence from a small initial perturbation. Lower row: final patterns across different $(F, k)$ values. <span class="run-ref">$ python reaction_diffusion.py</span>
+    </figcaption>
+  </figure>
+
+  <h3 class="sub-heading" id="rd-regimes">7.4 Pattern Regimes</h3>
+
+  <p>The $(F, k)$ parameter space contains a rich zoo of qualitatively different patterns. Four classic regimes:</p>
+
+  <table class="cmp-table">
+    <tr><th>Regime</th><th>$(F, k)$</th><th>Description</th></tr>
+    <tr><td>Mitosis (self-replicating spots)</td><td>$(0.0367,\; 0.0649)$</td><td>Spots that grow, elongate, and divide — resembling cell division.</td></tr>
+    <tr><td>Coral / labyrinthine</td><td>$(0.0545,\; 0.062)$</td><td>Branching, maze-like structures reminiscent of brain coral.</td></tr>
+    <tr><td>Soliton spots</td><td>$(0.03,\; 0.062)$</td><td>Isolated, stable spots that neither grow nor shrink.</td></tr>
+    <tr><td>Worms / stripes</td><td>$(0.058,\; 0.065)$</td><td>Elongated filaments that connect into stripe-like networks.</td></tr>
+  </table>
+
+  <p>Transitions between regimes are often sharp: a small change in $F$ or $k$ can switch the system from spots to stripes or from stable patterns to extinction.</p>
+
+  <figure>
+    <img src="rd_turing_mosaic_artistic.png" alt="Mosaic of Turing patterns across parameter space" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 2.</span>
+      <strong>Turing pattern mosaic.</strong> Final $V$ concentration fields for a grid of $(F, k)$ values, illustrating the diversity of self-organised structures accessible to the Gray-Scott model. <span class="run-ref">$ python reaction_diffusion.py</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="rd_reaction_fronts_artistic.png" alt="Gradient magnitude of labyrinthine pattern" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 3.</span>
+      <strong>Reaction fronts.</strong> Gradient magnitude $|\nabla V|$ of a labyrinthine pattern, highlighting the sharp reaction fronts where $V$ transitions between high and low concentration. <span class="run-ref">$ python reaction_diffusion.py</span>
+    </figcaption>
+  </figure>
+
+  <div class="topic-nav">
+    <a href="../Chaos-Dynamics/">&larr; Prev: Chaos &amp; Dynamics</a> <span></span>
+  </div>
+</main>
+</div>
+<script src="../../../shared/nav.js"></script>
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+</body>
+</html>

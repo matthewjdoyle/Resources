@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FFT &amp; Spectral Methods — Numerical Methods</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <link rel="stylesheet" href="../../../shared/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <script src="../../../shared/theme.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1><a href="../../../index.html">Resources</a></h1>
+      <span class="subtitle">FFT &amp; Spectral Methods</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Table of contents">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <a class="nav-item" href="../../../index.html">← Dashboard</a>
+  <span class="nav-section">Topics</span>
+  <a class="nav-item topic-link" href="../Interpolation/">Interpolation</a>
+  <a class="nav-item topic-link" href="../Root-Finding/">Root Finding</a>
+  <a class="nav-item topic-link" href="../ODE-Solvers/">ODE Solvers</a>
+  <a class="nav-item topic-link" href="../Numerical-Integration/">Integration</a>
+  <a class="nav-item topic-link current" href="../FFT-Spectral/">FFT &amp; Spectral</a>
+  <a class="nav-item topic-link" href="../Chaos-Dynamics/">Chaos &amp; Dynamics</a>
+  <a class="nav-item topic-link" href="../Reaction-Diffusion/">Reaction-Diffusion</a>
+  <span class="nav-section">On This Page</span>
+  <a class="nav-item" href="#fft-dft">The DFT</a>
+  <a class="nav-item" href="#fft-cooley-tukey">Cooley-Tukey FFT</a>
+  <a class="nav-item" href="#fft-2d">2-D DFT</a>
+  <a class="nav-item" href="#fft-psd">Power Spectrum</a>
+  <a class="nav-item" href="#fft-spectral-diff">Spectral Differentiation</a>
+  <a class="nav-item" href="#fft-chebyshev">Chebyshev Polynomials</a>
+  <a class="nav-item" href="#fft-practice">In Practice</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources/tree/main/Mathematics/Numerical-Methods/FFT-Spectral/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<main>
+  <div class="breadcrumb">
+    <a href="../../../">Resources</a><span class="sep">/</span>
+    <a href="../../">Mathematics</a><span class="sep">/</span>
+    Numerical Methods<span class="sep">/</span>
+    FFT &amp; Spectral Methods
+  </div>
+  <h1 class="doc-title">FFT &amp; Spectral Methods</h1>
+  <div class="doc-meta"><span>Python script: <code>fft_spectral.py</code></span></div>
+
+  <p>
+    The Discrete Fourier Transform (DFT) and its fast algorithm (FFT) underpin an
+    extraordinary range of numerical methods: signal processing, spectral analysis, fast
+    convolution, PDE solvers, and more.  This section develops the theory from the DFT
+    definition through the Cooley-Tukey radix-2 FFT, extends it to two dimensions and
+    power-spectrum estimation, and shows how Fourier and Chebyshev spectral methods achieve
+    exponential convergence for smooth functions.
+  </p>
+
+  <div class="run-ref">
+    <code>$ python fft_spectral.py</code>
+  </div>
+
+  <!-- 5.1 The DFT -->
+  <h2 id="fft-dft">5.1 The DFT</h2>
+
+  <p>
+    Given $N$ samples $x_0, x_1, \ldots, x_{N-1}$, the forward DFT produces $N$ frequency
+    coefficients:
+  </p>
+
+  $$X_k = \sum_{n=0}^{N-1} x_n \, e^{-i\,2\pi k n / N}, \qquad k = 0, 1, \ldots, N-1$$
+
+  <p>
+    and the inverse DFT recovers the original samples:
+  </p>
+
+  $$x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k \, e^{\,i\,2\pi k n / N}, \qquad n = 0, 1, \ldots, N-1$$
+
+  <p>
+    In matrix form the DFT is $\mathbf{X} = \mathbf{F}\,\mathbf{x}$, where
+    $F_{kn} = \omega_N^{kn}$ with $\omega_N = e^{-i\,2\pi/N}$.  The matrix $\mathbf{F}$ is
+    symmetric and unitary (up to a factor of $\sqrt{N}$), so the inverse is simply
+    $\mathbf{F}^{-1} = \frac{1}{N}\,\mathbf{F}^*$.  Direct evaluation costs $O(N^2)$
+    operations.
+  </p>
+
+  <!-- 5.2 Cooley-Tukey FFT -->
+  <h2 id="fft-cooley-tukey">5.2 Cooley-Tukey FFT</h2>
+
+  <p>
+    The Cooley-Tukey algorithm exploits the periodicity and symmetry of $\omega_N$ to
+    decompose an $N$-point DFT (where $N$ is a power of 2) into two $N/2$-point DFTs
+    &mdash; one on the even-indexed samples and one on the odd-indexed samples:
+  </p>
+
+  $$X_k = E_k + \omega_N^k \, O_k, \qquad X_{k+N/2} = E_k - \omega_N^k \, O_k$$
+
+  <p>
+    where $E_k$ and $O_k$ are the DFTs of the even and odd subsequences respectively.
+    Applying this decomposition recursively reduces the total cost from $O(N^2)$ to
+    $O(N \log N)$ &mdash; one of the most consequential algorithmic improvements in
+    scientific computing.
+  </p>
+
+  <figure>
+    <img src="fft_timing.png" alt="FFT vs DFT timing comparison" />
+    <figcaption>Figure 1 &mdash; Wall-clock comparison of direct DFT ($O(N^2)$) and
+    Cooley-Tukey FFT ($O(N\log N)$).  The practical speedup exceeds $100\times$ even for
+    modest $N$.</figcaption>
+  </figure>
+
+  <div class="warning-box">
+    <strong>Warning:</strong> A recursive Python implementation of the FFT is useful for
+    understanding the algorithm but should never be used in production.  NumPy's
+    <code>numpy.fft</code> and SciPy's <code>scipy.fft</code> call optimised C/Fortran
+    libraries (e.g., pocketfft) and are orders of magnitude faster.
+  </div>
+
+  <!-- 5.3 2-D DFT -->
+  <h2 id="fft-2d">5.3 2-D DFT</h2>
+
+  <p>
+    The two-dimensional DFT of an $M \times N$ array $x_{m,n}$ is:
+  </p>
+
+  $$X_{k,l} = \sum_{m=0}^{M-1}\sum_{n=0}^{N-1} x_{m,n}\,e^{-i\,2\pi(km/M + ln/N)}$$
+
+  <p>
+    Because the 2-D DFT is <strong>separable</strong>, it can be computed as $N$ row-wise
+    1-D FFTs followed by $M$ column-wise 1-D FFTs (or vice versa), giving a total cost of
+    $O(MN\log(MN))$.  This separability extends to higher dimensions and is the basis for
+    efficient image processing, 2-D convolution, and spectral PDE solvers on rectangular
+    grids.
+  </p>
+
+  <figure>
+    <img src="fft_2d_spectrum.png" alt="2-D Fourier spectrum" />
+    <figcaption>Figure 2 &mdash; Original image and its 2-D magnitude spectrum
+    $\log(1 + |X_{k,l}|)$.  Low-frequency content concentrates near the centre; edges and
+    textures produce high-frequency components along corresponding orientations.</figcaption>
+  </figure>
+
+  <!-- 5.4 Power Spectrum -->
+  <h2 id="fft-psd">5.4 Power Spectrum</h2>
+
+  <p>
+    The <strong>periodogram</strong> estimates the power spectral density (PSD) from a
+    single realisation:
+  </p>
+
+  $$\hat{S}(f_k) = \frac{1}{N}\,|X_k|^2$$
+
+  <p>
+    The raw periodogram is a noisy, inconsistent estimator.  <strong>Welch's
+    method</strong> improves it by splitting the signal into overlapping, windowed segments,
+    computing a periodogram for each, and averaging.  Common window functions (Hann,
+    Hamming, Blackman) reduce spectral leakage by tapering the segment edges toward zero,
+    trading frequency resolution for lower sidelobe levels.
+  </p>
+
+  <figure>
+    <img src="fft_power_spectrum.png" alt="Power spectrum estimation" />
+    <figcaption>Figure 3 &mdash; Power spectrum of a noisy multi-tone signal estimated via
+    the raw periodogram and Welch's method.  Averaging and windowing dramatically reduce
+    the noise floor.</figcaption>
+  </figure>
+
+  <!-- 5.5 Spectral Differentiation -->
+  <h2 id="fft-spectral-diff">5.5 Spectral Differentiation</h2>
+
+  <p>
+    For a periodic function sampled on a uniform grid, differentiation in Fourier space
+    reduces to multiplication by $ik$:
+  </p>
+
+  $$\widehat{f'}(k) = ik\,\hat{f}(k)$$
+
+  <p>
+    The derivative is computed as: (1) FFT the samples, (2) multiply each coefficient by
+    $ik$, (3) inverse FFT.  For smooth, periodic functions this achieves
+    <strong>exponential convergence</strong> &mdash; error decreases faster than any
+    polynomial in $N$ &mdash; making spectral methods vastly more accurate than finite
+    differences for the same grid resolution.
+  </p>
+
+  <figure>
+    <img src="fft_spectral_diff.png" alt="Spectral vs finite-difference derivative" />
+    <figcaption>Figure 4 &mdash; Error in the numerical derivative of $\sin(x)$ computed by
+    spectral differentiation vs. second-order finite differences.  The spectral method
+    reaches machine precision with far fewer grid points.</figcaption>
+  </figure>
+
+  <div class="warning-box">
+    <strong>Warning:</strong> Spectral differentiation via FFT assumes the function is
+    periodic on the computational domain.  Applying it to non-periodic data introduces
+    Gibbs-like oscillations at the boundaries.  For non-periodic problems, use Chebyshev
+    spectral methods instead.
+  </div>
+
+  <!-- 5.6 Chebyshev Polynomials -->
+  <h2 id="fft-chebyshev">5.6 Chebyshev Polynomials</h2>
+
+  <p>
+    Chebyshev spectral methods handle non-periodic functions on a finite interval $[-1,1]$
+    by expanding in Chebyshev polynomials $T_n(x) = \cos(n\,\arccos x)$.  The optimal
+    interpolation nodes are the Chebyshev-Gauss-Lobatto points:
+  </p>
+
+  $$x_j = \cos\!\left(\frac{\pi j}{N}\right), \qquad j = 0, 1, \ldots, N$$
+
+  <p>
+    These nodes cluster near the endpoints, suppressing Runge's phenomenon and ensuring
+    near-optimal polynomial interpolation.  For analytic functions the Chebyshev
+    coefficients decay exponentially, giving <strong>spectral convergence</strong> even on
+    non-periodic domains.  The Gibbs phenomenon &mdash; persistent oscillations near
+    discontinuities in truncated Fourier series &mdash; can be mitigated in the Chebyshev
+    setting using filtering or Gegenbauer reconstruction.
+  </p>
+
+  <figure>
+    <img src="fft_chebyshev.png" alt="Chebyshev interpolation and convergence" />
+    <figcaption>Figure 5 &mdash; Chebyshev interpolation of a smooth function on $[-1,1]$,
+    showing the clustered node distribution and exponential coefficient decay.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="fft_spectral_artistic.png" alt="Spectral methods artistic visualization" />
+    <figcaption>Figure 6 &mdash; Artistic visualization of spectral basis functions and
+    their superposition, illustrating how a small number of modes can accurately represent
+    complex waveforms.</figcaption>
+  </figure>
+
+  <!-- 5.7 In Practice -->
+  <h2 id="fft-practice">5.7 In Practice</h2>
+
+  <div class="box">
+    <strong>Recommended library:</strong>
+    <code>scipy.fft</code> &mdash; a modern, feature-complete FFT interface supporting
+    real, complex, and multidimensional transforms with optional worker-thread parallelism.
+    For real-valued data, use <code>rfft</code>/<code>irfft</code> to halve memory and
+    computation.
+  </div>
+
+  <pre><code># FFT of a real-valued signal
+from scipy.fft import rfft, irfft, rfftfreq
+import numpy as np
+
+N, dt = 1024, 1/1000
+t = np.arange(N) * dt
+x = np.sin(2*np.pi*50*t) + 0.5*np.sin(2*np.pi*120*t)
+
+X = rfft(x)
+freqs = rfftfreq(N, dt)
+</code></pre>
+
+  <pre><code># Welch's method for power spectrum estimation
+from scipy.signal import welch
+
+f, Pxx = welch(x, fs=1/dt, nperseg=256, noverlap=128, window='hann')
+</code></pre>
+
+  <pre><code># Spectral differentiation of a periodic function
+k = np.fft.fftfreq(N, d=1/N) * 2j * np.pi   # wavenumbers * i
+f_hat = np.fft.fft(f_values)
+df_values = np.real(np.fft.ifft(k * f_hat))
+</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>Recommended Approach</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1-D FFT (real data)</td><td><code>scipy.fft.rfft</code> / <code>irfft</code></td></tr>
+      <tr><td>2-D FFT (images)</td><td><code>scipy.fft.fft2</code> / <code>ifft2</code></td></tr>
+      <tr><td>Power spectrum</td><td><code>scipy.signal.welch</code></td></tr>
+      <tr><td>Spectral PDE solver (periodic)</td><td>FFT + $ik$ multiplication</td></tr>
+      <tr><td>Non-periodic spectral method</td><td>Chebyshev (e.g., <code>chebpy</code>)</td></tr>
+      <tr><td>Large-scale / GPU</td><td><code>cupy.fft</code> or <code>jax.numpy.fft</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="topic-nav"><a href="../Numerical-Integration/">&larr; Prev: Integration</a> <a href="../Chaos-Dynamics/">Next: Chaos &amp; Dynamics &rarr;</a></div>
+</main>
+</div>
+<script src="../../../shared/nav.js"></script>
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+</body>
+</html>

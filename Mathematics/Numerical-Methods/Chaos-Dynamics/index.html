@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaos &amp; Dynamical Systems — Numerical Methods</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <link rel="stylesheet" href="../../../shared/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+  <script src="../../../shared/theme.js"></script>
+</head>
+<body>
+<header>
+  <div class="header-actions">
+    <button id="hamburger-btn" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
+    <div class="title-bar">
+      <h1><a href="../../../index.html">Resources</a></h1>
+      <span class="subtitle">Chaos &amp; Dynamical Systems</span>
+    </div>
+  </div>
+  <button id="theme-btn" onclick="toggleTheme()" aria-label="Toggle colour theme"></button>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Table of contents">
+  <button id="sidebar-close-btn" aria-label="Close navigation menu" onclick="closeSidebar()">&times;</button>
+  <a class="nav-item" href="../../../index.html">← Dashboard</a>
+  <span class="nav-section">Topics</span>
+  <a class="nav-item topic-link" href="../Interpolation/">Interpolation</a>
+  <a class="nav-item topic-link" href="../Root-Finding/">Root Finding</a>
+  <a class="nav-item topic-link" href="../ODE-Solvers/">ODE Solvers</a>
+  <a class="nav-item topic-link" href="../Numerical-Integration/">Integration</a>
+  <a class="nav-item topic-link" href="../FFT-Spectral/">FFT &amp; Spectral</a>
+  <a class="nav-item topic-link current" href="../Chaos-Dynamics/">Chaos &amp; Dynamics</a>
+  <a class="nav-item topic-link" href="../Reaction-Diffusion/">Reaction-Diffusion</a>
+  <span class="nav-section">On This Page</span>
+  <a class="nav-item" href="#chaos-logistic">Logistic Map</a>
+  <a class="nav-item" href="#chaos-bifurcation">Bifurcation Diagram</a>
+  <a class="nav-item" href="#chaos-lyapunov">Lyapunov Exponents</a>
+  <a class="nav-item" href="#chaos-lorenz">Lorenz Attractor</a>
+  <a class="nav-item" href="#chaos-pendulum">Double Pendulum</a>
+  <div class="sidebar-bottom">
+    <a class="sidebar-github" href="https://github.com/matthewjdoyle/Resources/tree/main/Mathematics/Numerical-Methods/Chaos-Dynamics/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<main>
+  <div class="breadcrumb">
+    <a href="../../../">Resources</a><span class="sep">/</span>
+    <a href="../../">Mathematics</a><span class="sep">/</span>
+    Numerical Methods<span class="sep">/</span>
+    Chaos &amp; Dynamical Systems
+  </div>
+  <h1 class="doc-title">Chaos &amp; Dynamical Systems</h1>
+  <div class="doc-meta"><span>Python script: <code>chaos_dynamics.py</code></span></div>
+
+  <p>A deterministic system is <em>chaotic</em> when its long-term behaviour depends sensitively on initial conditions: two trajectories starting arbitrarily close will diverge exponentially in time. Chaos does not require randomness or high dimensionality — it can emerge from the simplest nonlinear maps and low-order ODEs.</p>
+
+  <h3 class="sub-heading" id="chaos-logistic">6.1 The Logistic Map</h3>
+
+  <p>The logistic map is the simplest discrete dynamical system that exhibits the full transition from stable fixed points to periodic orbits to chaos. Starting from an initial value $x_0 \in (0,1)$, iterate:</p>
+
+  <div class="box formula">
+    $$x_{n+1} = r\,x_n(1 - x_n)$$
+  </div>
+
+  <p>The parameter $r$ controls the dynamics. For $r &lt; 1$ the population dies out. For $1 &lt; r &lt; 3$ the iterates converge to a stable fixed point $x^* = 1 - 1/r$. At $r = 3$ the fixed point loses stability and the system begins oscillating between two values — a <em>period-doubling bifurcation</em>. Further period doublings occur in rapid succession: period 4 near $r \approx 3.449$, period 8 near $r \approx 3.544$, and so on, accumulating at $r_\infty \approx 3.5699$ where the map becomes chaotic.</p>
+
+  <p>A <em>cobweb diagram</em> visualises iteration graphically: plot $f(x) = rx(1-x)$ together with the diagonal $y = x$, then trace a staircase from $(x_n, x_n)$ vertically to $(x_n, f(x_n))$ and horizontally to $(f(x_n), f(x_n))$. The staircase spirals inward toward a fixed point when the orbit is stable and bounces erratically when chaotic.</p>
+
+  <h3 class="sub-heading" id="chaos-bifurcation">6.2 Bifurcation Diagram</h3>
+
+  <p>The bifurcation diagram plots the long-term iterates of the logistic map (after discarding transients) against the parameter $r$. It reveals the period-doubling cascade at a glance: a single branch that splits into two at $r = 3$, four near $r \approx 3.449$, and so on until the branches merge into a dense chaotic band beyond $r_\infty$.</p>
+
+  <p>Feigenbaum discovered that the ratio of successive bifurcation intervals converges to a universal constant:</p>
+
+  <div class="box formula">
+    $$\delta = \lim_{n \to \infty} \frac{r_{n} - r_{n-1}}{r_{n+1} - r_n} \approx 4.669\,201\,609\ldots$$
+  </div>
+
+  <p>This constant is <em>universal</em> — it appears in any unimodal map undergoing period doubling, not just the logistic map.</p>
+
+  <figure>
+    <img src="chaos_bifurcation_artistic.png" alt="Bifurcation diagram of the logistic map" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 1.</span>
+      <strong>Bifurcation diagram of the logistic map.</strong> Long-term iterates of $x_{n+1} = rx_n(1-x_n)$ plotted against $r$, showing the period-doubling route to chaos. Windows of periodic behaviour (e.g. the period-3 window near $r \approx 3.83$) punctuate the chaotic regime. <span class="run-ref">$ python chaos_dynamics.py</span>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="chaos_diagnostic.png" alt="Chaos diagnostics overview" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 2.</span>
+      <strong>Diagnostic overview</strong> — bifurcation diagram, Lyapunov exponent vs $r$, cobweb diagrams at selected $r$ values, Lorenz attractor time series, and double pendulum trajectory divergence. <span class="run-ref">$ python chaos_dynamics.py</span>
+    </figcaption>
+  </figure>
+
+  <h3 class="sub-heading" id="chaos-lyapunov">6.3 Lyapunov Exponents</h3>
+
+  <p>The Lyapunov exponent quantifies the average rate at which nearby orbits diverge (or converge). For a one-dimensional map $x_{n+1} = f(x_n)$ it is defined as:</p>
+
+  <div class="box formula">
+    $$\lambda = \lim_{N \to \infty} \frac{1}{N} \sum_{n=0}^{N-1} \ln\!\left|f'(x_n)\right|$$
+  </div>
+
+  <p>When $\lambda &lt; 0$ perturbations shrink and the orbit is stable; when $\lambda &gt; 0$ nearby trajectories separate exponentially and the system is chaotic. The boundary $\lambda = 0$ corresponds to marginal stability (bifurcation points). For the logistic map with $r &gt; r_\infty$ the exponent is positive almost everywhere, confirming chaos — though it dips negative inside periodic windows.</p>
+
+  <p>For higher-dimensional systems there is one Lyapunov exponent per dimension; chaos requires at least one positive exponent. The Lorenz system, for example, has one positive, one zero (along the flow), and one negative exponent.</p>
+
+  <h3 class="sub-heading" id="chaos-lorenz">6.4 Lorenz Attractor</h3>
+
+  <p>In 1963 Edward Lorenz discovered that a drastically simplified model of atmospheric convection exhibits sensitive dependence on initial conditions. The system is defined by three coupled ODEs:</p>
+
+  <div class="box formula">
+    $$\dot{x} = \sigma(y - x), \qquad \dot{y} = x(\rho - z) - y, \qquad \dot{z} = xy - \beta z$$
+  </div>
+
+  <p>With the classic parameters $\sigma = 10$, $\rho = 28$, $\beta = 8/3$, trajectories are attracted to a butterfly-shaped set of zero volume in phase space — a <em>strange attractor</em>. The attractor is fractal: it has a non-integer dimension of approximately 2.06. Trajectories never repeat and never escape, yet two solutions starting a tiny distance apart diverge exponentially while remaining bounded on the attractor.</p>
+
+  <figure>
+    <img src="chaos_lorenz_artistic.png" alt="Lorenz attractor" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 3.</span>
+      <strong>Lorenz attractor</strong> with $\sigma=10, \rho=28, \beta=8/3$. The trajectory winds around two lobes, switching unpredictably between them — the hallmark of deterministic chaos in a continuous system. <span class="run-ref">$ python chaos_dynamics.py</span>
+    </figcaption>
+  </figure>
+
+  <h3 class="sub-heading" id="chaos-pendulum">6.5 Double Pendulum</h3>
+
+  <p>The double pendulum — two rigid rods connected end-to-end, swinging under gravity — is a canonical physical system that exhibits chaos. Its equations of motion are derived from the Lagrangian and involve coupled second-order nonlinear ODEs in the two angles $\theta_1$ and $\theta_2$.</p>
+
+  <p>At small amplitudes the motion is quasi-periodic and predictable. At larger amplitudes the system becomes chaotic: two pendulums released from initial angles differing by as little as $10^{-6}$ radians will follow nearly identical paths for a time, then abruptly diverge into completely different trajectories. This exponential sensitivity makes long-term prediction impossible despite the system being fully deterministic.</p>
+
+  <figure>
+    <img src="chaos_double_pendulum_artistic.png" alt="Double pendulum trajectories" loading="lazy" />
+    <figcaption>
+      <span class="fig-num">Figure 4.</span>
+      <strong>Double pendulum.</strong> Trajectories of the lower mass traced over time. The intricate, non-repeating path illustrates the chaotic regime — small changes in initial conditions produce qualitatively different motion. <span class="run-ref">$ python chaos_dynamics.py</span>
+    </figcaption>
+  </figure>
+
+  <div class="topic-nav">
+    <a href="../FFT-Spectral/">&larr; Prev: FFT &amp; Spectral</a> <a href="../Reaction-Diffusion/">Next: Reaction-Diffusion &rarr;</a>
+  </div>
+</main>
+</div>
+<script src="../../../shared/nav.js"></script>
+<footer class="site-footer">
+  <a href="https://www.matthewd0yle.com" target="_blank" rel="noopener">
+    <img src="https://www.matthewd0yle.com/favicon.ico" alt="" width="16" height="16" class="footer-icon" />
+    matthewd0yle.com
+  </a>
+</footer>
+</body>
+</html>
