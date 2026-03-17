@@ -2,6 +2,14 @@
 
 A selection of scripts, templates and tools for solving problems.
 
+---
+
+The best way to explore these resources is through the online dashboard:
+
+**[matthewd0yle.com/Resources](https://matthewd0yle.com/Resources/)** — live site
+
+You can also browse the repo structure directly in GitHub, but the website provides superior organisation and readability.
+
 ## Categories
 
 - **Analysis/**
@@ -15,7 +23,7 @@ A selection of scripts, templates and tools for solving problems.
   - **Hypothesis Testing**: A collection of resources for hypothesis testing, including a decision tree for selecting statistical tests, practice problems, and an interactive HTML reference.
   - **TSP (Travelling Salesman Problem)**:
     - Scripts for node and edge generation and solving TSP instances using graph theory and optimization.
-  - **Numerical Methods** — Each topic has its own interactive HTML reference (`index.html`) with MathJax formulas, code examples, and a dark/light theme toggle. Browse them all at the [dashboard](https://matthewjdoyle.github.io/Resources/).
+  - **Numerical Methods** — Each topic has its own interactive HTML reference with MathJax formulas, code examples, and a dark/light theme toggle. Includes Python scripts that generate diagnostic and artistic visualisations.
     - **Interpolation** (`interpolation.py`): Lagrange polynomial, Newton's divided differences, and cubic spline interpolation. Includes a striking visualisation of Runge's phenomenon — showing how high-degree polynomials on equally-spaced nodes oscillate wildly — plus an artistic dark-background comparison plot.
     - **Root Finding** (`root_finding.py`): Bisection, Newton-Raphson, and Secant methods with a convergence comparison (log error vs iteration). Features an artistic Newton fractal — a colour map of which root of $z^3 - 1$ each starting point in the complex plane converges to.
     - **ODE Solvers** (`ode_solvers.py`): Forward Euler, Heun's (RK2), and classic RK4, with a global error vs step-size log-log convergence plot confirming each method's theoretical order. Includes an artistic phase-space portrait of a damped pendulum.
