@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""
+TOC Generator — auto-discovers README.md files across the repo and writes
+shared/toc.js.  Manual entries that can't be auto-discovered (external links,
+PDFs, custom labels, ordering) live in shared/toc-overrides.json.
+
+Usage:
+    python3 Dev-Tools/generate-toc.py             # regenerate toc.js
+    python3 Dev-Tools/generate-toc.py --dry-run   # preview without writing
+    python3 Dev-Tools/generate-toc.py --check     # exit 1 if toc.js is stale
+"""
+
+import os
+import sys
+import json
+import argparse
+from pathlib import Path
+
+SKIP_DIRS = {
+    ".git", "node_modules", "__pycache__", ".venv", "venv", "env",
+    ".env", "dist", "build", ".next", ".nuxt", "target", ".cache",
+    ".idea", ".vscode", "__MACOSX", ".DS_Store",
+}
+
+# Top-level dirs that are infrastructure, not content sections
+ROOT_SKIP = {"shared"}
+
+RENDER_TOC_JS = """\
+/**
+ * Render the site TOC into `containerId`.
+ * `currentHref` — the full href of the active page (optional), used to
+ *   apply the `.current` class. Pass null on the dashboard.
+ */
+function renderTOC(containerId, currentHref) {
+  var html = '';
+  for (var s = 0; s < SITE_TOC.length; s++) {
+    var section = SITE_TOC[s];
+    html += '<span class="nav-section">' + section.label + '</span>';
+    for (var i = 0; i < section.items.length; i++) {
+      var item = section.items[i];
+      var isCurrent = currentHref && item.href === currentHref;
+      var cls = 'nav-item toc-item' + (isCurrent ? ' current' : '');
+      var attrs = item.external ? ' target="_blank" rel="noopener"' : '';
+      var label = item.label
+        + (item.pdf      ? ' <span class="pdf-badge">(PDF)</span>' : '')
+        + (item.external ? ' <span class="ext-icon">\\u2197</span>'    : '');
+      html += '<a class="' + cls + '" href="' + item.href + '"' + attrs + '>' + label + '</a>';
+    }
+  }
+  document.getElementById(containerId).innerHTML = html;
+}"""
+
+
+def auto_label(name: str) -> str:
+    """Convert a directory name to a human-readable label."""
+    return name.replace("-", " ").replace("_", " ")
+
+
+def discover_readmes(root: Path, skip_paths: set) -> dict:
+    """
+    Walk the repo and return {section_name: [rel_dir_path, ...]} for every
+    directory that contains a README.md.  The repo root itself is excluded.
+    """
+    sections = {}
+
+    for dirpath, dirs, files in os.walk(root):
+        current = Path(dirpath)
+        dirs[:] = sorted([d for d in dirs if d not in SKIP_DIRS and not d.startswith(".")])
+
+        try:
+            rel = current.relative_to(root)
+        except ValueError:
+            continue
+
+        parts = rel.parts
+        if not parts:           # repo root README — not a nav item
+            continue
+
+        section = parts[0]
+        if section in ROOT_SKIP:
+            dirs.clear()
+            continue
+
+        rel_str = "/".join(parts)   # forward slashes on all platforms
+
+        # Drop configured skip paths
+        if rel_str in skip_paths or any(
+            rel_str.startswith(s + "/") for s in skip_paths
+        ):
+            dirs.clear()
+            continue
+
+        if any(f.lower() == "readme.md" for f in files):
+            sections.setdefault(section, []).append(rel_str)
+
+    return sections
+
+
+def build_item(rel_dir: str, label_overrides: dict) -> dict:
+    """Build a TOC item for an auto-discovered README.md directory."""
+    label = label_overrides.get(rel_dir) or auto_label(Path(rel_dir).name)
+    return {"label": label, "href": f"/shared/md.html?src={rel_dir}/README.md"}
+
+
+def build_toc(root: Path, overrides: dict) -> list:
+    """Merge auto-discovered READMEs with manual overrides into SITE_TOC."""
+    label_overrides  = overrides.get("label_overrides", {})
+    skip_paths       = set(overrides.get("skip_paths", []))
+    extras           = overrides.get("extras", {})
+    manual_sections  = overrides.get("manual_sections", {})
+    section_order    = overrides.get("section_order", [])
+
+    discovered = discover_readmes(root, skip_paths)
+
+    all_sections = {}
+
+    # Fully-manual sections (e.g. Explore — no README files to discover)
+    for name, items in manual_sections.items():
+        all_sections[name] = list(items)
+
+    # Auto-discovered sections (sorted by path so shallower items come first)
+    for section, rel_dirs in discovered.items():
+        items = [build_item(d, label_overrides) for d in sorted(rel_dirs)]
+        all_sections.setdefault(section, []).extend(items)
+
+    # Append manual extras (external links, PDFs, etc.)
+    for section, extra_items in extras.items():
+        all_sections.setdefault(section, []).extend(extra_items)
+
+    # Order sections: explicit order first, then any new ones alphabetically
+    ordered = section_order + sorted(k for k in all_sections if k not in section_order)
+    return [{"label": n, "items": all_sections[n]} for n in ordered if n in all_sections]
+
+
+def render_toc_js(sections: list) -> str:
+    """Produce the contents of toc.js."""
+    header = (
+        "// AUTO-GENERATED by Dev-Tools/generate-toc.py — do not edit by hand.\n"
+        "// To customise entries, edit shared/toc-overrides.json and re-run.\n"
+        "var SITE_TOC = "
+    )
+    data = json.dumps(sections, indent=2, ensure_ascii=False)
+    return header + data + ";\n\n" + RENDER_TOC_JS + "\n"
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate shared/toc.js from README discovery + overrides."
+    )
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Print generated JS without writing")
+    parser.add_argument("--check",   action="store_true",
+                        help="Exit 1 if toc.js would change (useful in CI)")
+    args = parser.parse_args()
+
+    root           = Path(__file__).parent.parent.resolve()
+    overrides_path = root / "shared" / "toc-overrides.json"
+    toc_path       = root / "shared" / "toc.js"
+
+    overrides = {}
+    if overrides_path.exists():
+        overrides = json.loads(overrides_path.read_text(encoding="utf-8"))
+
+    sections = build_toc(root, overrides)
+    output   = render_toc_js(sections)
+
+    if args.dry_run:
+        print(output)
+        return
+
+    if args.check:
+        current = toc_path.read_text(encoding="utf-8") if toc_path.exists() else ""
+        if current != output:
+            print("toc.js is stale — run generate-toc.py to update.")
+            sys.exit(1)
+        print("toc.js is up to date.")
+        return
+
+    toc_path.write_text(output, encoding="utf-8")
+    total = sum(len(s["items"]) for s in sections)
+    print(f"OK  Wrote {len(sections)} sections, {total} items -> shared/toc.js")
+    for s in sections:
+        auto  = sum(1 for i in s["items"] if "/md.html?src=" in i["href"] and not i.get("pdf"))
+        extra = len(s["items"]) - auto
+        note  = f"  ({auto} auto, {extra} manual)" if extra else f"  ({auto} auto)"
+        print(f"   {s['label']}: {len(s['items'])} items{note}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,47 @@
+{
+  "section_order": ["Explore", "Mathematics", "Analysis", "Physics", "Dev-Tools", "Templates"],
+
+  "manual_sections": {
+    "Explore": [
+      { "label": "Image Gallery", "href": "/shared/gallery.html" }
+    ]
+  },
+
+  "label_overrides": {
+    "Mathematics/Numerical-Methods/FFT-Spectral":        "FFT & Spectral",
+    "Mathematics/Numerical-Methods/Chaos-Dynamics":      "Chaos & Dynamics",
+    "Mathematics/Numerical-Methods/Reaction-Diffusion":  "Reaction-Diffusion",
+    "Mathematics/TSP":                                   "Travelling Salesman",
+    "Dev-Tools":                                         "Overview",
+    "Dev-Tools/workbench":                               "Resource Workbench",
+    "Templates/LaTeX/A3 Exam Poster Template":           "A3 Exam Poster",
+    "Templates/LaTeX/Info Sheet":                        "Technical Reference",
+    "Templates/LaTeX/Physics Poster Template":           "Physics Poster"
+  },
+
+  "extras": {
+    "Mathematics": [
+      { "label": "Hypothesis Testing", "href": "/Mathematics/Hypothesis Testing/HypothesisTesting.html" },
+      { "label": "HT Decision Tree",   "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingDecisionTree.pdf", "pdf": true },
+      { "label": "HT Practice",        "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingPractice.pdf",      "pdf": true }
+    ],
+    "Physics": [
+      { "label": "Jupiter Satellite Orbits", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits", "external": true }
+    ],
+    "Dev-Tools": [
+      { "label": "Repo Dashboard",  "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools",                       "external": true },
+      { "label": "README Coverage", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools/readme-coverage.py",    "external": true }
+    ],
+    "Templates": [
+      { "label": "Scientific Article", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Templates/LaTeX/Popular%20Account%20Template", "external": true },
+      { "label": "Sci. Article",        "href": "/shared/md.html?src=Templates/LaTeX/Popular Account Template/main.pdf",              "pdf": true },
+      { "label": "A3 Poster",           "href": "/shared/md.html?src=Templates/LaTeX/A3 Exam Poster Template/template.pdf",           "pdf": true },
+      { "label": "Info Sheet",          "href": "/shared/md.html?src=Templates/LaTeX/Info Sheet/main.pdf",                            "pdf": true },
+      { "label": "Physics Poster",      "href": "/shared/md.html?src=Templates/LaTeX/Physics Poster Template/physics_poster.pdf",     "pdf": true }
+    ]
+  },
+
+  "skip_paths": [
+    "Mathematics/Numerical-Methods/docs"
+  ]
+}

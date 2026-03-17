@@ -1,8 +1,12 @@
 gitignore/
 
+
+
 UK Finance Maths/
 Algorithm Visualiser/
 *docs/
+*/test-images/
+
 
 
 *.DS_Store
