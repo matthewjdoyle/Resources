@@ -1,0 +1,5 @@
+{
+  "cdnBaseUrl": "https://pub-c8ae63c0e5ee4cb583b641383a371d08.r2.dev",
+  "extensions": ["gif", "png", "jpg", "jpeg", "webp", "svg"],
+  "exclude": ["Image-Vectorizer/test-images/"]
+}
