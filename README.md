@@ -32,8 +32,12 @@ You can also browse the repo structure directly in GitHub, but the website provi
     - **Chaos & Dynamical Systems** (`chaos_dynamics.py`): Logistic map, bifurcation diagrams, Lyapunov exponents, the Lorenz attractor, and the double pendulum. Includes cobweb diagrams, a sensitivity-to-initial-conditions study, and three artistic visualisations — a 3D Lorenz attractor colour-coded by speed, a double pendulum sensitivity mosaic, and a high-density bifurcation fractal.
     - **Reaction-Diffusion** (`reaction_diffusion.py`): Gray-Scott model simulating Turing pattern formation — spots, stripes, coral labyrinths, and self-replicating structures emerging from two diffusing chemicals. Uses a 5-point Laplacian stencil with periodic boundaries and forward Euler integration. Features a diagnostic time-evolution panel, a high-resolution four-regime Turing mosaic, and an artistic gradient-magnitude visualisation of reaction fronts.
 
+- **Image-Vectorizer/**
+  - `vectorize.py`: Converts raster images (PNG, JPG, BMP, GIF, TIFF, WebP) to SVG vector graphics. Uses k-means++ colour quantization, contour tracing, Ramer-Douglas-Peucker path simplification, and optional cubic Bezier fitting. Configurable colour count, detail level, and input scaling.
+
 - **Physics/**
   - **Jupiter-Satellite-Orbits** (`JupiterOrbitSimulator-Example.py`): An N-body physics simulation of the Galilean moons (Io, Europa, Ganymede, and Callisto) orbiting Jupiter. Includes Keplerian orbital element verification and 3D artistic visualizations.
+  - **Percolation** (`percolation.py`, `percolation_variants.py`): Site percolation on the square lattice — spanning probability, order parameter, cluster-size distributions, and finite-size scaling collapse with exact 2D critical exponents. Includes five variant models: gradient, explosive (Achlioptas), bootstrap ($k$-core), invasion, and directed percolation, each with diagnostic plots, artistic visualisations, and animated GIFs.
 
 - **Templates/**
   - **LaTeX**:

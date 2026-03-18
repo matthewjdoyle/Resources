@@ -119,3 +119,11 @@ print(solution)   # [0.7862, 0.6180]
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md">&larr; Prev: Interpolation</a>
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md">Next: ODE Solvers &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="root-references">References</h3>
+
+<div class="references">
+<p>[1] K. E. Atkinson, <em>An Introduction to Numerical Analysis</em>, 2nd ed. (Wiley, New York, 1989).</p>
+<p>[2] R. P. Brent, <em>Algorithms for Minimization Without Derivatives</em> (Prentice-Hall, Englewood Cliffs, NJ, 1973).</p>
+<p>[3] J. H. Hubbard, D. Schleicher, and S. Sutherland, Not. Am. Math. Soc. <strong>48</strong>, 1010 (2001).</p>
+</div>

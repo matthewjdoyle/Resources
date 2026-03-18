@@ -81,3 +81,12 @@ Transitions between regimes are often sharp: a small change in $F$ or $k$ can sw
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md">&larr; Prev: Chaos &amp; Dynamics</a>
   <span></span>
 </div>
+
+<h3 class="sub-heading" id="rd-references">References</h3>
+
+<div class="references">
+<p>[1] A. M. Turing, Philos. Trans. R. Soc. London B <strong>237</strong>, 37 (1952).</p>
+<p>[2] P. Gray and S. K. Scott, Chem. Eng. Sci. <strong>38</strong>, 29 (1983).</p>
+<p>[3] J. E. Pearson, Science <strong>261</strong>, 189 (1993).</p>
+<p>[4] J. D. Murray, <em>Mathematical Biology II: Spatial Models and Biomedical Applications</em>, 3rd ed. (Springer, New York, 2003).</p>
+</div>

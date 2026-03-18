@@ -154,3 +154,12 @@ Europa's eccentricity is similarly maintained by the resonance, generating enoug
 
 <strong>Higher-order symplectic methods.</strong> The leapfrog is second-order. Fourth-order symplectic integrators (e.g., the Forest-Ruth or Yoshida methods) use three or more substeps per time step, achieving $O(\Delta t^4)$ accuracy while preserving the symplectic structure. For problems requiring very long integration times with larger time steps, these are the standard choice.
 </div>
+
+<h3 class="sub-heading" id="jup-references">References</h3>
+
+<div class="references">
+<p>[1] C. D. Murray and S. F. Dermott, <em>Solar System Dynamics</em> (Cambridge University Press, Cambridge, 1999).</p>
+<p>[2] E. Hairer, C. Lubich, and G. Wanner, <em>Geometric Numerical Integration</em>, 2nd ed. (Springer, Berlin, 2006).</p>
+<p>[3] H. Yoshida, Phys. Lett. A <strong>150</strong>, 262 (1990).</p>
+<p>[4] S. J. Peale, P. Cassen, and R. T. Reynolds, Science <strong>203</strong>, 892 (1979).</p>
+</div>

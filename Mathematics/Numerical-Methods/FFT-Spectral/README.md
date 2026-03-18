@@ -147,3 +147,12 @@ df_values = np.real(np.fft.ifft(k * f_hat))
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md">&larr; Prev: Integration</a>
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md">Next: Chaos &amp; Dynamics &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="fft-references">References</h3>
+
+<div class="references">
+<p>[1] J. W. Cooley and J. W. Tukey, Math. Comput. <strong>19</strong>, 297 (1965).</p>
+<p>[2] P. Welch, IEEE Trans. Audio Electroacoust. <strong>15</strong>, 70 (1967).</p>
+<p>[3] L. N. Trefethen, <em>Spectral Methods in MATLAB</em> (SIAM, Philadelphia, 2000).</p>
+<p>[4] J. P. Boyd, <em>Chebyshev and Fourier Spectral Methods</em>, 2nd ed. (Dover, New York, 2001).</p>
+</div>

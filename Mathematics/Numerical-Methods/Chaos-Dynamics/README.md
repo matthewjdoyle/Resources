@@ -100,3 +100,12 @@ At small amplitudes the motion is quasi-periodic and predictable. At larger ampl
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md">&larr; Prev: FFT &amp; Spectral</a>
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md">Next: Reaction-Diffusion &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="chaos-references">References</h3>
+
+<div class="references">
+<p>[1] E. N. Lorenz, J. Atmos. Sci. <strong>20</strong>, 130 (1963).</p>
+<p>[2] R. M. May, Nature <strong>261</strong>, 459 (1976).</p>
+<p>[3] M. J. Feigenbaum, J. Stat. Phys. <strong>19</strong>, 25 (1978).</p>
+<p>[4] S. H. Strogatz, <em>Nonlinear Dynamics and Chaos</em>, 2nd ed. (Westview Press, Boulder, CO, 2015).</p>
+</div>

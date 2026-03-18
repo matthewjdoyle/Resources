@@ -92,3 +92,11 @@ I = 0.5*(b - a) * np.dot(weights, np.sin(mapped))
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md">&larr; Prev: ODE Solvers</a>
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md">Next: FFT &amp; Spectral &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="quad-references">References</h3>
+
+<div class="references">
+<p>[1] P. J. Davis and P. Rabinowitz, <em>Methods of Numerical Integration</em>, 2nd ed. (Academic Press, New York, 1984).</p>
+<p>[2] R. Piessens, E. de Doncker-Kapenga, C. W. Überhuber, and D. K. Kahaner, <em>QUADPACK: A Subroutine Package for Automatic Integration</em> (Springer, Berlin, 1983).</p>
+<p>[3] G. H. Golub and J. H. Welsch, Math. Comput. <strong>23</strong>, 221 (1969).</p>
+</div>

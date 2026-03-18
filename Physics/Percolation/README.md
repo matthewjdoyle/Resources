@@ -288,3 +288,16 @@ Directed percolation restricts bond activation to a preferred direction — here
 <strong>Variant comparison.</strong> Standard site percolation alongside five exotic variants, each at or near its critical point. <span class="run-ref">$ python percolation_variants.py</span>
 </figcaption>
 </figure>
+
+<h3 class="sub-heading" id="perc-references">References</h3>
+
+<div class="references">
+<p>[1] D. Stauffer and A. Aharony, <em>Introduction to Percolation Theory</em>, 2nd ed. (Taylor &amp; Francis, London, 1994).</p>
+<p>[2] G. R. Grimmett, <em>Percolation</em>, 2nd ed. (Springer, Berlin, 1999).</p>
+<p>[3] H. Kesten, Commun. Math. Phys. <strong>74</strong>, 41 (1980).</p>
+<p>[4] M. E. J. Newman and R. M. Ziff, Phys. Rev. Lett. <strong>85</strong>, 4104 (2000).</p>
+<p>[5] B. Sapoval, M. Rosso, and J. F. Gouyet, J. Phys. Lett. <strong>46</strong>, L149 (1985).</p>
+<p>[6] D. Achlioptas, R. M. D'Souza, and J. Spencer, Science <strong>323</strong>, 1453 (2009).</p>
+<p>[7] O. Riordan and L. Warnke, Science <strong>333</strong>, 322 (2011).</p>
+<p>[8] D. Wilkinson and J. F. Willemsen, J. Phys. A <strong>16</strong>, 3365 (1983).</p>
+</div>

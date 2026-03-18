@@ -112,3 +112,11 @@ sol_stiff = solve_ivp(f_stiff, t_span, y0, method='BDF',
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md">&larr; Prev: Root Finding</a>
   <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md">Next: Integration &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="ode-references">References</h3>
+
+<div class="references">
+<p>[1] E. Hairer, S. P. Nørsett, and G. Wanner, <em>Solving Ordinary Differential Equations I: Nonstiff Problems</em>, 2nd ed. (Springer, Berlin, 1993).</p>
+<p>[2] J. R. Dormand and P. J. Prince, J. Comput. Appl. Math. <strong>6</strong>, 19 (1980).</p>
+<p>[3] E. Hairer, C. Lubich, and G. Wanner, <em>Geometric Numerical Integration</em>, 2nd ed. (Springer, Berlin, 2006).</p>
+</div>

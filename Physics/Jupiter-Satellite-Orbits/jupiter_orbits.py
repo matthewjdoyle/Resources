@@ -29,11 +29,11 @@ from pathlib import Path
 G = 6.67430e-11  # gravitational constant (m³ kg⁻¹ s⁻²)
 
 BODIES = {
-    "Jupiter":  {"mass": 1.89819e27, "color": "#ffcc00"},
-    "Io":       {"mass": 8.9319e22,  "a": 4.2180e8, "v": 17334.0, "color": "#ff6b35"},
-    "Europa":   {"mass": 4.7998e22,  "a": 6.7110e8, "v": 13740.0, "color": "#4fc3f7"},
-    "Ganymede": {"mass": 1.4819e23,  "a": 1.0704e9, "v": 10880.0, "color": "#ab47bc"},
-    "Callisto": {"mass": 1.0759e23,  "a": 1.8827e9, "v": 8204.0,  "color": "#78909c"},
+    "Jupiter":  {"mass": 1.89819e27, "color": "#ffcc00", "radius_km": 69_911},
+    "Io":       {"mass": 8.9319e22,  "a": 4.2180e8, "v": 17334.0, "color": "#ff6b35", "radius_km": 1_821.6},
+    "Europa":   {"mass": 4.7998e22,  "a": 6.7110e8, "v": 13740.0, "color": "#4fc3f7", "radius_km": 1_560.8},
+    "Ganymede": {"mass": 1.4819e23,  "a": 1.0704e9, "v": 10880.0, "color": "#ab47bc", "radius_km": 2_634.1},
+    "Callisto": {"mass": 1.0759e23,  "a": 1.8827e9, "v": 8204.0,  "color": "#78909c", "radius_km": 2_410.3},
 }
 
 MOON_NAMES = ["Io", "Europa", "Ganymede", "Callisto"]
@@ -43,6 +43,16 @@ ALL_NAMES = ["Jupiter"] + MOON_NAMES
 KNOWN_PERIODS = {"Io": 1.769, "Europa": 3.551, "Ganymede": 7.155, "Callisto": 16.689}
 
 OUTPUT_DIR = Path(__file__).parent
+
+
+def marker_sizes(jupiter_ms=16):
+    """Compute marker sizes proportional to sqrt(radius), with Jupiter as reference."""
+    r_jup = BODIES["Jupiter"]["radius_km"]
+    sizes = {}
+    for name in ALL_NAMES:
+        r = BODIES[name]["radius_km"]
+        sizes[name] = jupiter_ms * np.sqrt(r / r_jup)
+    return sizes
 
 
 # ─── Section 1: Physics engine ────────────────────────────────────────────────
@@ -267,6 +277,7 @@ def make_diagnostic_figure(t_arr, pos_arr, vel_arr):
 
     # (a) Top-down orbital paths (x-y plane)
     ax = axes[0, 0]
+    ms = marker_sizes(jupiter_ms=14)
     for m, name in enumerate(MOON_NAMES):
         ax.plot(
             rel_pos[:, m, 0] / 1e9,
@@ -276,7 +287,14 @@ def make_diagnostic_figure(t_arr, pos_arr, vel_arr):
             linewidth=0.5,
             label=name,
         )
-    ax.plot(0, 0, "o", color="#ffcc00", markersize=8, zorder=10)
+        # Moon position at final snapshot
+        ax.plot(
+            rel_pos[-1, m, 0] / 1e9,
+            rel_pos[-1, m, 1] / 1e9,
+            "o", color=moon_colors[m],
+            markersize=ms[name], zorder=11,
+        )
+    ax.plot(0, 0, "o", color="#ffcc00", markersize=ms["Jupiter"], zorder=10)
     ax.set_xlabel("x (10⁶ km)")
     ax.set_ylabel("y (10⁶ km)")
     ax.set_title("(a) Orbital Paths (x–y plane)")
@@ -395,10 +413,11 @@ def make_artistic_figure(pos_arr):
     ax.grid(False)
     ax.set_axis_off()
 
-    # Jupiter: large disc with glow layers
-    ax.plot([0], [0], [0], "o", color="#ffcc00", markersize=10, zorder=20)
-    ax.plot([0], [0], [0], "o", color="#ff9800", markersize=22, alpha=0.15, zorder=19)
-    ax.plot([0], [0], [0], "o", color="#ff9800", markersize=35, alpha=0.05, zorder=18)
+    # Marker sizes proportional to sqrt(radius)
+    ms = marker_sizes(jupiter_ms=18)
+
+    # Jupiter: simple dot, no glow
+    ax.plot([0], [0], [0], "o", color="#ffcc00", markersize=ms["Jupiter"], zorder=20)
 
     # Colormaps for each moon
     cmaps = {
@@ -425,12 +444,12 @@ def make_artistic_figure(pos_arr):
             depthshade=True,
         )
 
-        # Current position marker
+        # Current position marker (relative size)
         ax.plot(
             [x[-1]], [y[-1]], [z[-1]],
             "o",
             color=BODIES[name]["color"],
-            markersize=6,
+            markersize=ms[name],
             zorder=15,
             markeredgecolor="white",
             markeredgewidth=0.5,
@@ -503,8 +522,8 @@ def make_animation(pos_arr, n_frames=120):
     ax.set_zlim(-limit, limit)
 
     moon_colors = [BODIES[n]["color"] for n in MOON_NAMES]
+    ms = marker_sizes(jupiter_ms=14)
     n_snapshots = len(rel_pos)
-    frames_per_orbit = n_snapshots // n_frames
 
     def update(frame):
         ax.cla()
@@ -522,9 +541,8 @@ def make_animation(pos_arr, n_frames=120):
         azim = -60 + (360 * frame / n_frames)
         ax.view_init(elev=25, azim=azim)
 
-        # Jupiter
-        ax.plot([0], [0], [0], "o", color="#ffcc00", markersize=8, zorder=20)
-        ax.plot([0], [0], [0], "o", color="#ff9800", markersize=18, alpha=0.15, zorder=19)
+        # Jupiter: simple dot, no glow
+        ax.plot([0], [0], [0], "o", color="#ffcc00", markersize=ms["Jupiter"], zorder=20)
 
         # Current time index
         t_idx = min(int(frame * n_snapshots / n_frames), n_snapshots - 1)
@@ -537,12 +555,12 @@ def make_animation(pos_arr, n_frames=120):
             # Full orbit trail (faded)
             ax.plot(x, y, z, color=moon_colors[m], alpha=0.2, linewidth=0.5)
 
-            # Current position
+            # Current position (relative size)
             ax.plot(
                 [x[t_idx]], [y[t_idx]], [z[t_idx]],
                 "o",
                 color=moon_colors[m],
-                markersize=5,
+                markersize=ms[name],
                 zorder=15,
                 markeredgecolor="white",
                 markeredgewidth=0.3,

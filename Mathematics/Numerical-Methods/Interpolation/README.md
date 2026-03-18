@@ -149,3 +149,11 @@ print(bi([1.0, 1.5, 2.0]))   # query at multiple points
 <div class="topic-nav">
   <span></span> <a href="/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md">Next: Root Finding &rarr;</a>
 </div>
+
+<h3 class="sub-heading" id="interp-references">References</h3>
+
+<div class="references">
+<p>[1] K. E. Atkinson, <em>An Introduction to Numerical Analysis</em>, 2nd ed. (Wiley, New York, 1989).</p>
+<p>[2] C. Runge, Z. Math. Phys. <strong>46</strong>, 224 (1901).</p>
+<p>[3] E. Süli and D. F. Mayers, <em>An Introduction to Numerical Analysis</em> (Cambridge University Press, Cambridge, 2003).</p>
+</div>
