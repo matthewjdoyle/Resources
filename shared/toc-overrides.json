@@ -17,6 +17,7 @@
     "Templates/LaTeX/A3 Exam Poster Template":           "A3 Exam Poster",
     "Templates/LaTeX/Info Sheet":                        "Technical Reference",
     "Templates/LaTeX/Physics Poster Template":           "Physics Poster",
+    "Physics/Jupiter-Satellite-Orbits":                    "Jupiter Satellite Orbits",
     "Physics/Percolation":                               "Percolation"
   },
 
@@ -26,9 +27,7 @@
       { "label": "HT Decision Tree",   "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingDecisionTree.pdf", "pdf": true },
       { "label": "HT Practice",        "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingPractice.pdf",      "pdf": true }
     ],
-    "Physics": [
-      { "label": "Jupiter Satellite Orbits", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits", "external": true }
-    ],
+    "Physics": [],
     "Dev-Tools": [
       { "label": "Repo Dashboard",  "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools",                       "external": true },
       { "label": "README Coverage", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools/readme-coverage.py",    "external": true }
