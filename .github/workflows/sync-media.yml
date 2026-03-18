@@ -51,10 +51,18 @@ jobs:
           }
           EOF
 
-      - name: Commit CDN config if changed
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate gallery.js
+        run: python Dev-Tools/generate-gallery.py
+
+      - name: Commit generated files if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add shared/cdn-config.json
+          git add shared/cdn-config.json shared/gallery.js
           git diff --cached --quiet && echo "No changes to commit" || \
-            (git commit -m "Update CDN config [skip ci]" && git push)
+            (git commit -m "Update CDN config and gallery [skip ci]" && git push)

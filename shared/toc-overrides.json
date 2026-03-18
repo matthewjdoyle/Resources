@@ -17,23 +17,89 @@
     "Templates/LaTeX/A3 Exam Poster Template":           "A3 Exam Poster",
     "Templates/LaTeX/Info Sheet":                        "Technical Reference",
     "Templates/LaTeX/Physics Poster Template":           "Physics Poster",
-    "Physics/Jupiter-Satellite-Orbits":                    "Jupiter Satellite Orbits",
+    "Physics/Jupiter-Satellite-Orbits":                  "Jupiter Satellite Orbits",
     "Physics/Percolation":                               "Percolation"
+  },
+
+  "card_meta": {
+    "Mathematics/Numerical-Methods/Interpolation": {
+      "description": "Lagrange polynomial, Newton's divided differences, cubic splines, and Runge's phenomenon.",
+      "tags": ["Python"]
+    },
+    "Mathematics/Numerical-Methods/Root-Finding": {
+      "description": "Bisection, Newton-Raphson, and secant methods with a Newton fractal visualisation.",
+      "tags": ["Python"]
+    },
+    "Mathematics/Numerical-Methods/ODE-Solvers": {
+      "description": "Forward Euler, Heun's (RK2), classic RK4, and Adams-Bashforth multi-step methods.",
+      "tags": ["Python"]
+    },
+    "Mathematics/Numerical-Methods/Numerical-Integration": {
+      "description": "Trapezoidal, Simpson's, and Gauss-Legendre quadrature with convergence analysis.",
+      "tags": ["Python"]
+    },
+    "Mathematics/Numerical-Methods/FFT-Spectral": {
+      "description": "DFT, Cooley-Tukey FFT, power spectra, spectral differentiation, and Chebyshev polynomials.",
+      "tags": ["Python"],
+      "card_label": "FFT & Spectral Methods"
+    },
+    "Mathematics/Numerical-Methods/Chaos-Dynamics": {
+      "description": "Logistic map, bifurcation diagrams, Lyapunov exponents, Lorenz attractor, double pendulum.",
+      "tags": ["Python"],
+      "card_label": "Chaos & Dynamical Systems"
+    },
+    "Mathematics/Numerical-Methods/Reaction-Diffusion": {
+      "description": "Gray-Scott model generating Turing patterns \u2014 spots, stripes, coral, and self-replicating structures.",
+      "tags": ["Python"]
+    },
+    "Mathematics/TSP": {
+      "description": "Node/edge generation and TSP solving via graph theory and optimisation.",
+      "tags": ["Python"],
+      "card_label": "Travelling Salesman Problem"
+    },
+    "Analysis/Step-Detection": {
+      "description": "Detect abrupt step changes in noisy 1D data using rolling average and threshold.",
+      "tags": ["MATLAB"]
+    },
+    "Physics/Jupiter-Satellite-Orbits": {
+      "description": "Symplectic N-body simulation of the Galilean moons with energy conservation, Kepler verification, Laplace resonance, and 3D visualisations.",
+      "tags": ["Python"]
+    },
+    "Physics/Percolation": {
+      "description": "Site, bond, and exotic percolation variants (gradient, explosive, bootstrap, invasion, directed) with Monte Carlo simulations and artistic visualisations.",
+      "tags": ["Python"]
+    },
+    "Dev-Tools/workbench": {
+      "description": "Textual-based TUI that auto-discovers and runs every script in the repo.",
+      "tags": ["Python", "Textual"]
+    },
+    "Templates/LaTeX/A3 Exam Poster Template": {
+      "description": "Large-format revision poster template for dense, organised review sheets.",
+      "tags": ["LaTeX"]
+    },
+    "Templates/LaTeX/Info Sheet": {
+      "description": "Landscape A4 template for technical interview reference sheets with syntax highlighting.",
+      "tags": ["LaTeX"]
+    },
+    "Templates/LaTeX/Physics Poster Template": {
+      "description": "Competition-quality A0 poster template with tikzposter, SI units, and QR codes.",
+      "tags": ["LaTeX"]
+    }
   },
 
   "extras": {
     "Mathematics": [
-      { "label": "Hypothesis Testing", "href": "/Mathematics/Hypothesis Testing/HypothesisTesting.html" },
+      { "label": "Hypothesis Testing", "href": "/Mathematics/Hypothesis Testing/HypothesisTesting.html", "card": true, "description": "Interactive decision tree for selecting statistical tests, with practice problems.", "tags": ["HTML", "Mermaid"] },
       { "label": "HT Decision Tree",   "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingDecisionTree.pdf", "pdf": true },
       { "label": "HT Practice",        "href": "/shared/md.html?src=Mathematics/Hypothesis Testing/HypothesisTestingPractice.pdf",      "pdf": true }
     ],
     "Physics": [],
     "Dev-Tools": [
-      { "label": "Repo Dashboard",  "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools",                       "external": true },
+      { "label": "Repo Dashboard",  "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools", "external": true, "card": true, "description": "Terminal-based dashboard with language distribution, line counts, and colour-coded output.", "tags": ["Python"] },
       { "label": "README Coverage", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools/readme-coverage.py",    "external": true }
     ],
     "Templates": [
-      { "label": "Scientific Article", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Templates/LaTeX/Popular%20Account%20Template", "external": true },
+      { "label": "Scientific Article", "href": "https://github.com/matthewjdoyle/Resources/tree/main/Templates/LaTeX/Popular%20Account%20Template", "external": true, "card": true, "description": "Clean, professional layout for scientific writing and reports.", "tags": ["LaTeX"] },
       { "label": "Sci. Article",        "href": "/shared/md.html?src=Templates/LaTeX/Popular Account Template/main.pdf",              "pdf": true },
       { "label": "A3 Poster",           "href": "/shared/md.html?src=Templates/LaTeX/A3 Exam Poster Template/template.pdf",           "pdf": true },
       { "label": "Info Sheet",          "href": "/shared/md.html?src=Templates/LaTeX/Info Sheet/main.pdf",                            "pdf": true },
@@ -43,5 +109,16 @@
 
   "skip_paths": [
     "Mathematics/Numerical-Methods/docs"
-  ]
+  ],
+
+  "gallery": {
+    "exclude_paths": [
+      "Image-Vectorizer/test-images",
+      "Templates"
+    ],
+    "alt_overrides": {
+      "Mathematics/Numerical-Methods/Interpolation/runges_phenomenon.png": "Runge's phenomenon",
+      "Physics/Jupiter-Satellite-Orbits/Orbits Figure 2026-02-03 023129.png": "Jupiter satellite orbits"
+    }
+  }
 }

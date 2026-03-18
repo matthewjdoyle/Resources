@@ -69,44 +69,9 @@
 
 <script src="nav.js"></script>
 <script src="toc.js"></script>
+<script src="gallery.js"></script>
 <script>
 renderTOC('sidebar-nav', '/shared/gallery.html');
-
-var GALLERY = [
-  // Interpolation
-  { src: '/Mathematics/Numerical-Methods/Interpolation/interpolation_artistic.png',  topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: 'Interpolation artistic visualisation' },
-  { src: '/Mathematics/Numerical-Methods/Interpolation/interpolation_diagnostic.png', topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: 'Interpolation diagnostic plot' },
-  { src: '/Mathematics/Numerical-Methods/Interpolation/runges_phenomenon.png',        topic: 'Interpolation',        topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md',         alt: "Runge's phenomenon" },
-  // Root Finding
-  { src: '/Mathematics/Numerical-Methods/Root-Finding/newton_fractal.png',            topic: 'Root Finding',         topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md',          alt: 'Newton fractal' },
-  { src: '/Mathematics/Numerical-Methods/Root-Finding/root_finding_diagnostic.png',   topic: 'Root Finding',         topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md',          alt: 'Root finding diagnostic' },
-  // ODE Solvers
-  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_adams_comparison.png',       topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'Adams method comparison' },
-  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_phase_space.png',            topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'ODE phase space' },
-  { src: '/Mathematics/Numerical-Methods/ODE-Solvers/ode_solvers_diagnostic.png',     topic: 'ODE Solvers',          topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md',           alt: 'ODE solvers diagnostic' },
-  // Numerical Integration
-  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_convergence.png',  topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature convergence' },
-  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_diffraction.png',  topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature diffraction pattern' },
-  { src: '/Mathematics/Numerical-Methods/Numerical-Integration/quadrature_panels.png',       topic: 'Numerical Integration', topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md', alt: 'Quadrature panels' },
-  // FFT & Spectral
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_2d_spectrum.png',           topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: '2D FFT spectrum' },
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_chebyshev.png',             topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'Chebyshev spectral method' },
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_power_spectrum.png',        topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT power spectrum' },
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_spectral_artistic.png',     topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT spectral artistic' },
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_spectral_diff.png',         topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'Spectral differentiation' },
-  { src: '/Mathematics/Numerical-Methods/FFT-Spectral/fft_timing.png',                topic: 'FFT & Spectral',       topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md',          alt: 'FFT timing benchmark' },
-  // Chaos & Dynamics
-  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_bifurcation_artistic.png',     topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Bifurcation diagram' },
-  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_lorenz_artistic.png',          topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Lorenz attractor' },
-  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_double_pendulum_artistic.png', topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Double pendulum' },
-  { src: '/Mathematics/Numerical-Methods/Chaos-Dynamics/chaos_diagnostic.png',               topic: 'Chaos & Dynamics',     topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md',       alt: 'Chaos diagnostic' },
-  // Reaction-Diffusion
-  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_turing_mosaic_artistic.png',  topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Turing mosaic pattern' },
-  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_reaction_fronts_artistic.png',topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Reaction fronts' },
-  { src: '/Mathematics/Numerical-Methods/Reaction-Diffusion/rd_diagnostic.png',              topic: 'Reaction-Diffusion',   topicHref: '/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md',   alt: 'Reaction-diffusion diagnostic' },
-  // Physics
-  { src: '/Physics/Jupiter-Satellite-Orbits/Orbits Figure 2026-02-03 023129.png',     topic: 'Physics',              topicHref: 'https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits', alt: 'Jupiter satellite orbits' }
-];
 
 // Render gallery
 var grid = document.getElementById('gallery-grid');

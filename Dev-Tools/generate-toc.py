@@ -50,6 +50,48 @@ function renderTOC(containerId, currentHref) {
   document.getElementById(containerId).innerHTML = html;
 }"""
 
+RENDER_CARDS_JS = """\
+/**
+ * Render dashboard cards from SITE_TOC.
+ * Only items with card: true are rendered.
+ * Sections with no card items are skipped.
+ */
+function renderCards(containerId) {
+  var html = '';
+  var skipSections = { 'Explore': true };
+  for (var s = 0; s < SITE_TOC.length; s++) {
+    var section = SITE_TOC[s];
+    if (skipSections[section.label]) continue;
+    var cards = [];
+    for (var i = 0; i < section.items.length; i++) {
+      var item = section.items[i];
+      if (!item.card) continue;
+      cards.push(item);
+    }
+    if (cards.length === 0) continue;
+    var sectionId = section.label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    html += '<div class="category" id="' + sectionId + '">';
+    html += '<h2 class="category-heading">' + section.label + '</h2>';
+    html += '<div class="card-grid">';
+    for (var c = 0; c < cards.length; c++) {
+      var card = cards[c];
+      var title = card.cardLabel || card.label;
+      var desc = card.description || '';
+      var tags = card.tags || [];
+      var attrs = card.external ? ' target="_blank" rel="noopener"' : '';
+      html += '<a class="card" href="' + card.href + '"' + attrs + '>';
+      html += '<h3>' + title + '</h3>';
+      if (desc) html += '<p>' + desc + '</p>';
+      for (var t = 0; t < tags.length; t++) {
+        html += '<span class="tag">' + tags[t] + '</span>';
+      }
+      html += '</a>';
+    }
+    html += '</div></div>';
+  }
+  document.getElementById(containerId).innerHTML = html;
+}"""
+
 
 def auto_label(name: str) -> str:
     """Convert a directory name to a human-readable label."""
@@ -96,10 +138,20 @@ def discover_readmes(root: Path, skip_paths: set) -> dict:
     return sections
 
 
-def build_item(rel_dir: str, label_overrides: dict) -> dict:
+def build_item(rel_dir: str, label_overrides: dict, card_meta: dict) -> dict:
     """Build a TOC item for an auto-discovered README.md directory."""
     label = label_overrides.get(rel_dir) or auto_label(Path(rel_dir).name)
-    return {"label": label, "href": f"/shared/md.html?src={rel_dir}/README.md"}
+    item = {"label": label, "href": f"/shared/md.html?src={rel_dir}/README.md"}
+    meta = card_meta.get(rel_dir)
+    if meta:
+        item["card"] = True
+        if "description" in meta:
+            item["description"] = meta["description"]
+        if "tags" in meta:
+            item["tags"] = meta["tags"]
+        if "card_label" in meta:
+            item["cardLabel"] = meta["card_label"]
+    return item
 
 
 def build_toc(root: Path, overrides: dict) -> list:
@@ -109,6 +161,7 @@ def build_toc(root: Path, overrides: dict) -> list:
     extras           = overrides.get("extras", {})
     manual_sections  = overrides.get("manual_sections", {})
     section_order    = overrides.get("section_order", [])
+    card_meta        = overrides.get("card_meta", {})
 
     discovered = discover_readmes(root, skip_paths)
 
@@ -120,7 +173,7 @@ def build_toc(root: Path, overrides: dict) -> list:
 
     # Auto-discovered sections (sorted by path so shallower items come first)
     for section, rel_dirs in discovered.items():
-        items = [build_item(d, label_overrides) for d in sorted(rel_dirs)]
+        items = [build_item(d, label_overrides, card_meta) for d in sorted(rel_dirs)]
         all_sections.setdefault(section, []).extend(items)
 
     # Append manual extras (external links, PDFs, etc.)
@@ -140,7 +193,7 @@ def render_toc_js(sections: list) -> str:
         "var SITE_TOC = "
     )
     data = json.dumps(sections, indent=2, ensure_ascii=False)
-    return header + data + ";\n\n" + RENDER_TOC_JS + "\n"
+    return header + data + ";\n\n" + RENDER_TOC_JS + "\n\n" + RENDER_CARDS_JS + "\n"
 
 
 def main():

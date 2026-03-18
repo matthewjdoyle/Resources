@@ -15,39 +15,88 @@ var SITE_TOC = [
     "items": [
       {
         "label": "Chaos & Dynamics",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Chaos-Dynamics/README.md",
+        "card": true,
+        "description": "Logistic map, bifurcation diagrams, Lyapunov exponents, Lorenz attractor, double pendulum.",
+        "tags": [
+          "Python"
+        ],
+        "cardLabel": "Chaos & Dynamical Systems"
       },
       {
         "label": "FFT & Spectral",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/FFT-Spectral/README.md",
+        "card": true,
+        "description": "DFT, Cooley-Tukey FFT, power spectra, spectral differentiation, and Chebyshev polynomials.",
+        "tags": [
+          "Python"
+        ],
+        "cardLabel": "FFT & Spectral Methods"
       },
       {
         "label": "Interpolation",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Interpolation/README.md",
+        "card": true,
+        "description": "Lagrange polynomial, Newton's divided differences, cubic splines, and Runge's phenomenon.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "Numerical Integration",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Numerical-Integration/README.md",
+        "card": true,
+        "description": "Trapezoidal, Simpson's, and Gauss-Legendre quadrature with convergence analysis.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "ODE Solvers",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/ODE-Solvers/README.md",
+        "card": true,
+        "description": "Forward Euler, Heun's (RK2), classic RK4, and Adams-Bashforth multi-step methods.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "Reaction-Diffusion",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Reaction-Diffusion/README.md",
+        "card": true,
+        "description": "Gray-Scott model generating Turing patterns — spots, stripes, coral, and self-replicating structures.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "Root Finding",
-        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md"
+        "href": "/shared/md.html?src=Mathematics/Numerical-Methods/Root-Finding/README.md",
+        "card": true,
+        "description": "Bisection, Newton-Raphson, and secant methods with a Newton fractal visualisation.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "Travelling Salesman",
-        "href": "/shared/md.html?src=Mathematics/TSP/README.md"
+        "href": "/shared/md.html?src=Mathematics/TSP/README.md",
+        "card": true,
+        "description": "Node/edge generation and TSP solving via graph theory and optimisation.",
+        "tags": [
+          "Python"
+        ],
+        "cardLabel": "Travelling Salesman Problem"
       },
       {
         "label": "Hypothesis Testing",
-        "href": "/Mathematics/Hypothesis Testing/HypothesisTesting.html"
+        "href": "/Mathematics/Hypothesis Testing/HypothesisTesting.html",
+        "card": true,
+        "description": "Interactive decision tree for selecting statistical tests, with practice problems.",
+        "tags": [
+          "HTML",
+          "Mermaid"
+        ]
       },
       {
         "label": "HT Decision Tree",
@@ -66,7 +115,12 @@ var SITE_TOC = [
     "items": [
       {
         "label": "Step Detection",
-        "href": "/shared/md.html?src=Analysis/Step-Detection/README.md"
+        "href": "/shared/md.html?src=Analysis/Step-Detection/README.md",
+        "card": true,
+        "description": "Detect abrupt step changes in noisy 1D data using rolling average and threshold.",
+        "tags": [
+          "MATLAB"
+        ]
       }
     ]
   },
@@ -75,11 +129,21 @@ var SITE_TOC = [
     "items": [
       {
         "label": "Jupiter Satellite Orbits",
-        "href": "/shared/md.html?src=Physics/Jupiter-Satellite-Orbits/README.md"
+        "href": "/shared/md.html?src=Physics/Jupiter-Satellite-Orbits/README.md",
+        "card": true,
+        "description": "Symplectic N-body simulation of the Galilean moons with energy conservation, Kepler verification, Laplace resonance, and 3D visualisations.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "Percolation",
-        "href": "/shared/md.html?src=Physics/Percolation/README.md"
+        "href": "/shared/md.html?src=Physics/Percolation/README.md",
+        "card": true,
+        "description": "Site, bond, and exotic percolation variants (gradient, explosive, bootstrap, invasion, directed) with Monte Carlo simulations and artistic visualisations.",
+        "tags": [
+          "Python"
+        ]
       }
     ]
   },
@@ -92,12 +156,23 @@ var SITE_TOC = [
       },
       {
         "label": "Resource Workbench",
-        "href": "/shared/md.html?src=Dev-Tools/workbench/README.md"
+        "href": "/shared/md.html?src=Dev-Tools/workbench/README.md",
+        "card": true,
+        "description": "Textual-based TUI that auto-discovers and runs every script in the repo.",
+        "tags": [
+          "Python",
+          "Textual"
+        ]
       },
       {
         "label": "Repo Dashboard",
         "href": "https://github.com/matthewjdoyle/Resources/tree/main/Dev-Tools",
-        "external": true
+        "external": true,
+        "card": true,
+        "description": "Terminal-based dashboard with language distribution, line counts, and colour-coded output.",
+        "tags": [
+          "Python"
+        ]
       },
       {
         "label": "README Coverage",
@@ -111,20 +186,40 @@ var SITE_TOC = [
     "items": [
       {
         "label": "A3 Exam Poster",
-        "href": "/shared/md.html?src=Templates/LaTeX/A3 Exam Poster Template/README.md"
+        "href": "/shared/md.html?src=Templates/LaTeX/A3 Exam Poster Template/README.md",
+        "card": true,
+        "description": "Large-format revision poster template for dense, organised review sheets.",
+        "tags": [
+          "LaTeX"
+        ]
       },
       {
         "label": "Technical Reference",
-        "href": "/shared/md.html?src=Templates/LaTeX/Info Sheet/README.md"
+        "href": "/shared/md.html?src=Templates/LaTeX/Info Sheet/README.md",
+        "card": true,
+        "description": "Landscape A4 template for technical interview reference sheets with syntax highlighting.",
+        "tags": [
+          "LaTeX"
+        ]
       },
       {
         "label": "Physics Poster",
-        "href": "/shared/md.html?src=Templates/LaTeX/Physics Poster Template/README.md"
+        "href": "/shared/md.html?src=Templates/LaTeX/Physics Poster Template/README.md",
+        "card": true,
+        "description": "Competition-quality A0 poster template with tikzposter, SI units, and QR codes.",
+        "tags": [
+          "LaTeX"
+        ]
       },
       {
         "label": "Scientific Article",
         "href": "https://github.com/matthewjdoyle/Resources/tree/main/Templates/LaTeX/Popular%20Account%20Template",
-        "external": true
+        "external": true,
+        "card": true,
+        "description": "Clean, professional layout for scientific writing and reports.",
+        "tags": [
+          "LaTeX"
+        ]
       },
       {
         "label": "Sci. Article",
@@ -179,6 +274,47 @@ function renderTOC(containerId, currentHref) {
         + (item.external ? ' <span class="ext-icon">\u2197</span>'    : '');
       html += '<a class="' + cls + '" href="' + item.href + '"' + attrs + '>' + label + '</a>';
     }
+  }
+  document.getElementById(containerId).innerHTML = html;
+}
+
+/**
+ * Render dashboard cards from SITE_TOC.
+ * Only items with card: true are rendered.
+ * Sections with no card items are skipped.
+ */
+function renderCards(containerId) {
+  var html = '';
+  var skipSections = { 'Explore': true };
+  for (var s = 0; s < SITE_TOC.length; s++) {
+    var section = SITE_TOC[s];
+    if (skipSections[section.label]) continue;
+    var cards = [];
+    for (var i = 0; i < section.items.length; i++) {
+      var item = section.items[i];
+      if (!item.card) continue;
+      cards.push(item);
+    }
+    if (cards.length === 0) continue;
+    var sectionId = section.label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    html += '<div class="category" id="' + sectionId + '">';
+    html += '<h2 class="category-heading">' + section.label + '</h2>';
+    html += '<div class="card-grid">';
+    for (var c = 0; c < cards.length; c++) {
+      var card = cards[c];
+      var title = card.cardLabel || card.label;
+      var desc = card.description || '';
+      var tags = card.tags || [];
+      var attrs = card.external ? ' target="_blank" rel="noopener"' : '';
+      html += '<a class="card" href="' + card.href + '"' + attrs + '>';
+      html += '<h3>' + title + '</h3>';
+      if (desc) html += '<p>' + desc + '</p>';
+      for (var t = 0; t < tags.length; t++) {
+        html += '<span class="tag">' + tags[t] + '</span>';
+      }
+      html += '</a>';
+    }
+    html += '</div></div>';
   }
   document.getElementById(containerId).innerHTML = html;
 }
