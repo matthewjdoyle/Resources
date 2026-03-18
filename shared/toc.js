@@ -74,6 +74,10 @@ var SITE_TOC = [
     "label": "Physics",
     "items": [
       {
+        "label": "Percolation",
+        "href": "/shared/md.html?src=Physics/Percolation/README.md"
+      },
+      {
         "label": "Jupiter Satellite Orbits",
         "href": "https://github.com/matthewjdoyle/Resources/tree/main/Physics/Jupiter-Satellite-Orbits",
         "external": true

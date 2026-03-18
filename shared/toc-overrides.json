@@ -16,7 +16,8 @@
     "Dev-Tools/workbench":                               "Resource Workbench",
     "Templates/LaTeX/A3 Exam Poster Template":           "A3 Exam Poster",
     "Templates/LaTeX/Info Sheet":                        "Technical Reference",
-    "Templates/LaTeX/Physics Poster Template":           "Physics Poster"
+    "Templates/LaTeX/Physics Poster Template":           "Physics Poster",
+    "Physics/Percolation":                               "Percolation"
   },
 
   "extras": {
